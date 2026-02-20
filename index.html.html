@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHL Express Austria Pricing Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #D40511 0%, #990000 100%);
+            color: #FFCC00;
+            padding: 30px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header .dhl-logo {
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-size: 1.1em;
+        }
+
+        header p {
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #D40511;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFCC00;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #D40511;
+            box-shadow: 0 0 0 3px rgba(212, 5, 17, 0.1);
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .preset-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #D40511;
+            background: white;
+            color: #D40511;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: #D40511;
+            color: white;
+        }
+
+        .preset-btn.active {
+            background: #D40511;
+            color: white;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            background: white;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active {
+            background: #D40511;
+            color: white;
+            border-color: #D40511;
+        }
+
+        .weight-calculator {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 18px;
+            border-left: 4px solid #FFCC00;
+        }
+
+        .weight-calculator label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .weight-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .weight-row input {
+            padding: 8px;
+            font-size: 0.9em;
+        }
+
+        .volumetric-result {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .premiums-section {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 18px;
+            border-left: 4px solid #FFCC00;
+        }
+
+        .premium-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .premium-option input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .premium-option label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .results-card {
+            position: sticky;
+            top: 20px;
+        }
+
+        .price-display {
+            background: linear-gradient(135deg, #FFCC00 0%, #FFB700 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .price-display .label {
+            font-size: 0.9em;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .price-display .amount {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #D40511;
+        }
+
+        .price-breakdown {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.95em;
+        }
+
+        .breakdown-total {
+            border-bottom: none;
+            font-weight: 700;
+            padding-top: 10px;
+            border-top: 2px solid #D40511;
+            font-size: 1.1em;
+            color: #D40511;
+        }
+
+        .search-select {
+            position: relative;
+        }
+        .search-select input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .search-select input[type="text"]:focus {
+            border-color: #D40511;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(212,5,17,0.15);
+        }
+        .search-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 220px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .search-dropdown .search-item {
+            padding: 9px 12px;
+            cursor: pointer;
+            font-size: 0.95em;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .search-dropdown .search-item:hover,
+        .search-dropdown .search-item.highlighted {
+            background: #FFF3CD;
+        }
+        .search-dropdown .search-item .code {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .search-dropdown .no-results {
+            padding: 10px 12px;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .info-section {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            border-left: 4px solid #D40511;
+        }
+
+        .info-section .info-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .info-section p {
+            margin: 5px 0;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #D40511 0%, #990000 100%);
+            color: #FFCC00;
+            border: none;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 5, 17, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #c33;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .note {
+            background: #fffbea;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 15px;
+            border-left: 4px solid #FFCC00;
+        }
+
+        .note strong {
+            color: #333;
+        }
+
+        .zone-indicator {
+            background: #e8f5e9;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            border-left: 4px solid #4caf50;
+        }
+
+        .zone-indicator .label {
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+
+        .zone-indicator p {
+            color: #555;
+            margin: 3px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                max-width: 100%;
+            }
+            .content-wrapper {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="position:relative;">
+            <h1><span class="dhl-logo">DHL</span> Express Austria</h1>
+            <p>Professional Pricing Tool for Internal Use</p>
+            <button onclick="document.getElementById('settingsModal').style.display='flex'" style="position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.15); border:2px solid #FFCC00; color:#FFCC00; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:1.4em; display:flex; align-items:center; justify-content:center;" title="Monthly Settings">&#9881;</button>
+            <div id="settingsLastUpdated" style="position:absolute; bottom:8px; right:20px; font-size:0.75em; color:rgba(255,204,0,0.7);"></div>
+        </header>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+            <div style="background:white; border-radius:10px; padding:30px; width:500px; max-width:90vw; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2 style="color:#D40511; font-size:1.3em; margin:0;">Monthly Settings</h2>
+                    <button onclick="document.getElementById('settingsModal').style.display='none'" style="background:none; border:none; font-size:1.5em; cursor:pointer; color:#666;">&times;</button>
+                </div>
+                <p style="font-size:0.85em; color:#666; margin-bottom:20px;">Update these values at the start of each month. Settings are saved automatically in your browser.</p>
+
+                <div style="display:grid; gap:16px;">
+                    <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
+                        <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">Express Fuel Surcharge — Jet Fuel (%)</label>
+                        <input type="number" id="settingsExpressFuel" step="0.01" min="0" value="28.75" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
+                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Based on USGC kerosene jet fuel index. Check DHL monthly update.</p>
+                    </div>
+
+                    <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
+                        <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">Economy Fuel Surcharge — Diesel (%)</label>
+                        <input type="number" id="settingsEconomyFuel" step="0.01" min="0" value="17.44" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
+                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Based on national diesel price index. Check DHL monthly update.</p>
+                    </div>
+
+                    <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
+                        <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">Demand Surcharge (€ per kg)</label>
+                        <input type="number" id="settingsDemand" step="0.01" min="0" value="0" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
+                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Currently suspended since 17 Feb 2026. Set to 0 when not active.</p>
+                    </div>
+                </div>
+
+                <button onclick="saveSettings()" style="width:100%; margin-top:20px; padding:14px; background:#D40511; color:white; border:none; border-radius:6px; font-size:1em; font-weight:700; cursor:pointer;">Save Settings</button>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Input Card -->
+            <div class="card">
+                <h2>Shipment Details</h2>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <!-- Origin Selection -->
+                <div class="form-group">
+                    <label>Origin</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn active" data-origin="AT">Hall in Tirol, AT</button>
+                        <button class="preset-btn" data-origin="BG">Sofia, BG</button>
+                        <button class="preset-btn" data-origin="BG-VIA-AT">Sofia → via Hall</button>
+                    </div>
+                    <select id="originCountry">
+                        <option value="AT">Hall in Tirol, Austria</option>
+                        <option value="BG">Sofia, Bulgaria</option>
+                        <option value="BG-VIA-AT">Sofia → Destination via Hall in Tirol</option>
+                    </select>
+                </div>
+
+                <!-- Destination Selection -->
+                <div class="form-group">
+                    <label>Destination Country</label>
+                    <div class="search-select" id="destSearchWrapper">
+                        <input type="text" id="destSearchInput" placeholder="Type to search..." autocomplete="off">
+                        <input type="hidden" id="destinationCountry" value="">
+                        <div class="search-dropdown" id="destDropdown"></div>
+                    </div>
+                </div>
+
+                <!-- Weight Input and Volumetric Calculator -->
+                <div class="form-group">
+                    <label>Weight & Dimensions</label>
+                    <div class="weight-calculator">
+                        <div style="margin-bottom: 12px;">
+                            <label style="margin-bottom: 8px;">Actual Weight (kg)</label>
+                            <input type="number" id="actualWeight" placeholder="0.0" step="0.01" min="0">
+                        </div>
+                        <div>
+                            <label style="margin-bottom: 8px;">Calculate Volumetric Weight (L × W × H ÷ 5000)</label>
+                            <div class="weight-row">
+                                <div>
+                                    <label style="font-size: 0.85em; margin-bottom: 4px;">Length (cm)</label>
+                                    <input type="number" id="length" placeholder="Length" step="0.1" min="0">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.85em; margin-bottom: 4px;">Width (cm)</label>
+                                    <input type="number" id="width" placeholder="Width" step="0.1" min="0">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.85em; margin-bottom: 4px;">Height (cm)</label>
+                                    <input type="number" id="height" placeholder="Height" step="0.1" min="0">
+                                </div>
+                            </div>
+                            <div class="volumetric-result">
+                                Volumetric Weight: <strong id="volumetricWeight">0.00</strong> kg
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customs Status -->
+                <div class="form-group">
+                    <label>Destination Type (applies for shipments ≤ 2 kg)</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn" data-customs="nicht">Within EU</button>
+                        <button class="toggle-btn active" data-customs="zoll">Outside EU</button>
+                    </div>
+                    <input type="hidden" id="customsStatus" value="zoll">
+                </div>
+
+                <!-- Service Type -->
+                <div class="form-group">
+                    <label>Service Type</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" data-service="express">Express</button>
+                        <button class="toggle-btn" data-service="economy">Economy Select</button>
+                    </div>
+                    <input type="hidden" id="serviceType" value="express">
+                    <p style="font-size: 0.85em; color: #666; margin-top: 8px;">Tariff type (Export/Import/Third Country/Domestic) is auto-determined based on origin &amp; destination</p>
+                </div>
+
+                <!-- Premium Options -->
+                <div class="form-group">
+                    <label>Premium Delivery Options</label>
+                    <div class="premiums-section">
+                        <div class="premium-option">
+                            <input type="radio" id="premium-none" name="premium" value="none" checked>
+                            <label for="premium-none">No Premium (+€0.00)</label>
+                        </div>
+                        <div class="premium-option">
+                            <input type="radio" id="premium-9" name="premium" value="900">
+                            <label for="premium-9">Premium 9:00 (+€35.00)</label>
+                        </div>
+                        <div class="premium-option">
+                            <input type="radio" id="premium-1030" name="premium" value="1030">
+                            <label for="premium-1030">Premium 10:30 (+€10.00)</label>
+                        </div>
+                        <div class="premium-option">
+                            <input type="radio" id="premium-12" name="premium" value="1200">
+                            <label for="premium-12">Premium 12:00 (+€5.00)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Surcharges -->
+                <div class="form-group">
+                    <label>Surcharges</label>
+                    <div class="weight-calculator">
+                        <input type="hidden" id="fuelSurcharge" value="28.75">
+                        <input type="hidden" id="economyFuelSurcharge" value="17.44">
+                        <input type="hidden" id="demandSurcharge" value="0">
+                        <div id="surchargeDisplay" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Express Fuel: <strong id="displayExpressFuel">28.75%</strong></span>
+                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Economy Fuel: <strong id="displayEconomyFuel">17.44%</strong></span>
+                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Demand: <strong id="displayDemand">€0.00/kg</strong></span>
+                            <button onclick="document.getElementById('settingsModal').style.display='flex'" style="background:none; border:1px solid #D40511; color:#D40511; padding:4px 12px; border-radius:20px; font-size:0.8em; cursor:pointer; font-weight:600;">Update &#9881;</button>
+                        </div>
+                        <div style="background:#FFF3CD; border:1px solid #FFCC00; border-radius:6px; padding:10px 12px; margin-top:4px;">
+                            <label style="display:flex; align-items:center; gap:10px; font-weight:500; cursor:pointer; font-size:0.9em; color:#333;">
+                                <input type="checkbox" id="nonStackableCheck" style="width:18px; height:18px; cursor:pointer; accent-color:#D40511;">
+                                Non-Stackable Pallet <span style="font-weight:700; color:#D40511;">(+50%)</span>
+                            </label>
+                            <p style="font-size:0.78em; color:#666; margin:6px 0 0 28px; line-height:1.4;">Tick this if the pallet cannot be stacked on top of (e.g. fragile, irregular shape, top-heavy). Applies to shipments over 25 kg.</p>
+                        </div>
+                        <div style="background:#e8f4e8; border:1px solid #4CAF50; border-radius:6px; padding:10px 12px; margin-top:10px;">
+                            <div style="display:flex; align-items:center; gap:10px; font-weight:500; font-size:0.9em; color:#333;">
+                                <span style="font-size:1.1em; color:#4CAF50;">&#10003;</span>
+                                VAT <span style="font-weight:700; color:#4CAF50;">(20%)</span> — auto-applied for intra-EU shipments
+                            </div>
+                            <p style="font-size:0.78em; color:#666; margin:6px 0 0 28px; line-height:1.4;">VAT 20% is mandatory when both origin and destination are within the EU. Exports outside the EU are VAT-exempt (0%).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculatePrice()">Calculate Price</button>
+            </div>
+
+            <!-- Results Card -->
+            <div class="card results-card">
+                <h2>Price Calculation</h2>
+
+                <div class="price-display">
+                    <div class="label">Total Shipping Cost</div>
+                    <div class="amount" id="totalPrice">€0.00</div>
+                </div>
+
+                <div class="price-breakdown" id="priceBreakdown" style="display:none;"></div>
+
+                <div id="emailQuoteSection" style="display:none; margin-top:12px;">
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="email" id="quoteEmailAddress" placeholder="Enter email address" style="flex:1; padding:10px 12px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
+                        <button onclick="emailQuote()" style="background:#D40511; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:0.95em;">Email Quote</button>
+                    </div>
+                </div>
+
+                <div class="zone-indicator" id="zoneInfo" style="display: none;">
+                    <div class="label">Tariff Information</div>
+                    <p id="serviceInfo"></p>
+                    <p id="zoneValue"></p>
+                    <p id="billableWeight"></p>
+                </div>
+
+                <div class="info-section" id="infoSection" style="display: none;">
+                    <div class="info-title">Shipment Summary</div>
+                    <p id="infoText"></p>
+                </div>
+
+                <div class="note" style="line-height:1.7;">
+                    <strong>Notes:</strong>
+                    <ol style="margin:8px 0 0 18px; padding:0; font-size:0.92em;">
+                        <li>All prices in EUR. Base rates valid as of 01 January 2026.</li>
+                        <li>VAT (20%) is automatically applied for intra-EU shipments (both origin &amp; destination within EU).</li>
+                        <li>Fuel surcharges updated monthly — Express (jet fuel): 28.75%, Economy (diesel): 17.44% (Feb 2026).</li>
+                        <li>Non-Conveyable Piece (€20) applies when actual weight &gt; 25 kg or longest side &gt; 120 cm.</li>
+                        <li>DHL rounds Express weight to nearest 0.5 kg, Economy to nearest 1 kg.</li>
+                        <li>Premium 9:00 / 10:30 / 12:00 apply to Express services only.</li>
+                        <li>Neutral Delivery (€5) is automatically included for all Sofia shipments.</li>
+                        <li>Demand surcharge suspended since 17 Feb 2026.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== PRICING DATA ====================
+        const EXPORT_RATES = {
+            zoll: {
+                0.5: [17.20, 18.04, 18.56, 24.78, 26.29, 26.70, 28.84, 32.61, 37.51],
+                1.0: [19.84, 20.68, 21.19, 27.24, 28.91, 31.34, 35.56, 39.31, 45.20],
+                1.5: [22.35, 23.20, 23.71, 29.42, 31.29, 35.79, 41.99, 45.65, 52.52],
+                2.0: [24.86, 25.72, 26.23, 31.60, 33.67, 40.24, 48.42, 51.99, 59.84],
+                2.5: [27.36, 28.22, 28.73, 33.80, 36.04, 44.68, 54.84, 58.36, 67.17],
+                3.0: [29.44, 30.30, 31.01, 35.91, 38.14, 48.59, 61.09, 64.59, 74.32],
+                3.5: [31.52, 32.38, 33.29, 38.02, 40.24, 52.50, 67.34, 70.82, 81.47],
+                4.0: [33.60, 34.46, 35.57, 40.13, 42.34, 56.41, 73.59, 77.05, 88.62],
+                4.5: [35.68, 36.54, 37.85, 42.24, 44.44, 60.32, 79.84, 83.28, 95.77],
+                5.0: [37.76, 38.62, 40.13, 44.35, 46.54, 64.23, 86.09, 89.51, 102.92],
+                5.5: [38.85, 40.13, 41.71, 46.02, 48.24, 66.95, 89.58, 92.98, 106.92],
+                6.0: [39.94, 41.64, 43.29, 47.69, 49.94, 69.67, 93.07, 96.45, 110.92],
+                6.5: [41.03, 43.15, 44.87, 49.36, 51.64, 72.39, 96.56, 99.92, 114.92],
+                7.0: [42.12, 44.66, 46.45, 51.03, 53.34, 75.11, 100.05, 103.39, 118.92],
+                7.5: [43.21, 46.17, 48.03, 52.70, 55.04, 77.83, 103.54, 106.86, 122.92],
+                8.0: [44.30, 47.68, 49.61, 54.37, 56.74, 80.55, 107.03, 110.33, 126.92],
+                8.5: [45.39, 49.19, 51.19, 56.04, 58.44, 83.27, 110.52, 113.80, 130.92],
+                9.0: [46.48, 50.70, 52.77, 57.71, 60.14, 85.99, 114.01, 117.27, 134.92],
+                9.5: [47.57, 52.21, 54.35, 59.38, 61.84, 88.71, 117.50, 120.74, 138.92],
+                10.0: [48.66, 53.72, 55.93, 61.05, 63.54, 91.43, 120.99, 124.21, 142.92],
+                11.0: [49.78, 54.98, 57.33, 62.55, 65.28, 94.03, 123.97, 127.27, 146.42],
+                12.0: [50.90, 56.24, 58.73, 64.05, 67.02, 96.63, 126.95, 130.33, 149.92],
+                13.0: [52.02, 57.50, 60.13, 65.55, 68.76, 99.23, 129.93, 133.39, 153.42],
+                14.0: [53.14, 58.76, 61.53, 67.05, 70.50, 101.83, 132.91, 136.45, 156.92],
+                15.0: [54.26, 60.02, 62.93, 68.55, 72.24, 104.43, 135.89, 139.51, 160.42],
+                16.0: [55.38, 61.28, 64.33, 70.05, 73.98, 107.03, 138.87, 142.57, 163.92],
+                17.0: [56.50, 62.54, 65.73, 71.55, 75.72, 109.63, 141.85, 145.63, 167.42],
+                18.0: [57.62, 63.80, 67.13, 73.05, 77.46, 112.23, 144.83, 148.69, 170.92],
+                19.0: [58.74, 65.06, 68.53, 74.55, 79.20, 114.83, 147.81, 151.75, 174.42],
+                20.0: [59.86, 66.32, 69.93, 76.05, 80.94, 117.43, 150.79, 154.81, 177.92],
+                21.0: [60.96, 67.58, 71.39, 77.71, 82.62, 120.09, 153.85, 157.95, 181.54],
+                22.0: [62.06, 68.84, 72.85, 79.37, 84.30, 122.75, 156.91, 161.09, 185.16],
+                23.0: [63.16, 70.10, 74.31, 81.03, 85.98, 125.41, 159.97, 164.23, 188.78],
+                24.0: [64.26, 71.36, 75.77, 82.69, 87.66, 128.07, 163.03, 167.37, 192.40],
+                25.0: [65.36, 72.62, 77.23, 84.35, 89.34, 130.73, 166.09, 170.51, 196.02],
+                26.0: [66.46, 73.88, 78.69, 86.01, 91.02, 133.39, 169.15, 173.65, 199.64],
+                27.0: [67.56, 75.14, 80.15, 87.67, 92.70, 136.05, 172.21, 176.79, 203.26],
+                28.0: [68.66, 76.40, 81.61, 89.33, 94.38, 138.71, 175.27, 179.93, 206.88],
+                29.0: [69.76, 77.66, 83.07, 90.99, 96.06, 141.37, 178.33, 183.07, 210.50],
+                30.0: [70.86, 78.92, 84.53, 92.65, 97.74, 144.03, 181.39, 186.21, 214.12],
+                40.0: [90.56, 97.72, 102.73, 116.55, 126.84, 196.53, 226.99, 240.01, 276.02],
+                50.0: [110.26, 116.52, 120.93, 140.45, 155.94, 249.03, 272.59, 293.81, 337.92],
+                60.0: [129.96, 135.32, 139.13, 164.35, 185.04, 301.53, 318.19, 347.61, 399.82],
+                70.0: [149.66, 154.12, 157.33, 188.25, 214.14, 354.03, 363.79, 401.41, 461.72]
+            },
+            nicht: {
+                0.5: [17.20, 18.04, 18.56, 18.85, 19.22, 19.98, 21.92, 25.86, 29.73],
+                1.0: [19.84, 20.68, 21.19, 21.47, 21.82, 24.63, 28.65, 32.55, 37.42],
+                1.5: [22.35, 23.20, 23.71, 23.88, 24.17, 29.07, 35.07, 38.91, 44.74],
+                2.0: [24.86, 25.72, 26.23, 26.29, 26.52, 33.51, 41.49, 45.27, 52.06]
+            }
+        };
+
+        const IMPORT_RATES = {
+            zoll: {
+                0.5: [19.78, 20.75, 21.34, 28.49, 30.23, 30.70, 33.16, 37.50, 43.13],
+                1.0: [22.82, 23.78, 24.37, 31.32, 33.25, 36.04, 40.89, 45.20, 51.98],
+                1.5: [25.70, 26.68, 27.26, 33.83, 35.99, 41.16, 48.29, 52.50, 60.40],
+                2.0: [28.58, 29.58, 30.15, 36.34, 38.73, 46.28, 55.69, 59.80, 68.82],
+                2.5: [31.47, 32.46, 33.04, 38.85, 41.46, 51.38, 63.07, 67.12, 77.25],
+                3.0: [33.86, 34.85, 35.66, 41.27, 43.87, 55.88, 70.25, 74.28, 85.47],
+                3.5: [36.25, 37.24, 38.28, 43.69, 46.28, 60.38, 77.43, 81.44, 93.69],
+                4.0: [38.64, 39.63, 40.90, 46.11, 48.69, 64.88, 84.61, 88.60, 101.91],
+                4.5: [41.03, 42.02, 43.52, 48.53, 51.10, 69.38, 91.79, 95.76, 110.13],
+                5.0: [43.42, 44.41, 46.14, 50.95, 53.51, 73.88, 98.97, 102.92, 118.35],
+                5.5: [44.68, 46.15, 47.97, 52.87, 55.46, 77.01, 102.99, 106.92, 122.95],
+                6.0: [45.94, 47.89, 49.80, 54.79, 57.41, 80.14, 107.01, 110.92, 127.55],
+                6.5: [47.20, 49.63, 51.63, 56.71, 59.36, 83.27, 111.03, 114.92, 132.15],
+                7.0: [48.46, 51.37, 53.46, 58.63, 61.31, 86.40, 115.05, 118.92, 136.75],
+                7.5: [49.72, 53.11, 55.29, 60.55, 63.26, 89.53, 119.07, 122.92, 141.35],
+                8.0: [50.98, 54.85, 57.12, 62.47, 65.21, 92.66, 123.09, 126.92, 145.95],
+                8.5: [52.24, 56.59, 58.95, 64.39, 67.16, 95.79, 127.11, 130.92, 150.55],
+                9.0: [53.50, 58.33, 60.78, 66.31, 69.11, 98.92, 131.13, 134.92, 155.15],
+                9.5: [54.76, 60.07, 62.61, 68.23, 71.06, 102.05, 135.15, 138.92, 159.75],
+                10.0: [56.02, 61.81, 64.44, 70.15, 73.01, 105.18, 139.17, 142.92, 164.35],
+                11.0: [57.30, 63.25, 66.06, 71.89, 75.01, 108.18, 142.59, 146.44, 168.37],
+                12.0: [58.58, 64.69, 67.68, 73.63, 77.01, 111.18, 146.01, 149.96, 172.39],
+                13.0: [59.86, 66.13, 69.30, 75.37, 79.01, 114.18, 149.43, 153.48, 176.41],
+                14.0: [61.14, 67.57, 70.92, 77.11, 81.01, 117.18, 152.85, 157.00, 180.43],
+                15.0: [62.42, 69.01, 72.54, 78.85, 83.01, 120.18, 156.27, 160.52, 184.45],
+                16.0: [63.70, 70.45, 74.16, 80.59, 85.01, 123.18, 159.69, 164.04, 188.47],
+                17.0: [64.98, 71.89, 75.78, 82.33, 87.01, 126.18, 163.11, 167.56, 192.49],
+                18.0: [66.26, 73.33, 77.40, 84.07, 89.01, 129.18, 166.53, 171.08, 196.51],
+                19.0: [67.54, 74.77, 79.02, 85.81, 91.01, 132.18, 169.95, 174.60, 200.53],
+                20.0: [68.82, 76.21, 80.64, 87.55, 93.01, 135.18, 173.37, 178.12, 204.55],
+                21.0: [70.10, 77.67, 82.28, 89.47, 94.93, 138.24, 177.35, 181.72, 208.71],
+                22.0: [71.38, 79.13, 83.92, 91.39, 96.85, 141.30, 181.33, 185.32, 212.87],
+                23.0: [72.66, 80.59, 85.56, 93.31, 98.77, 144.36, 185.31, 188.92, 217.03],
+                24.0: [73.94, 82.05, 87.20, 95.23, 100.69, 147.42, 189.29, 192.52, 221.19],
+                25.0: [75.22, 83.51, 88.84, 97.15, 102.61, 150.48, 193.27, 196.12, 225.35],
+                26.0: [76.50, 84.97, 90.48, 99.07, 104.53, 153.54, 197.25, 199.72, 229.51],
+                27.0: [77.78, 86.43, 92.12, 100.99, 106.45, 156.60, 201.23, 203.32, 233.67],
+                28.0: [79.06, 87.89, 93.76, 102.91, 108.37, 159.66, 205.21, 206.92, 237.83],
+                29.0: [80.34, 89.35, 95.40, 104.83, 110.29, 162.72, 209.19, 210.52, 241.99],
+                30.0: [81.62, 90.81, 97.04, 106.75, 112.21, 165.78, 213.17, 214.12, 246.15],
+                40.0: [98.72, 106.71, 112.14, 134.25, 145.71, 226.08, 265.67, 276.02, 317.35],
+                50.0: [115.82, 122.61, 127.24, 161.75, 179.21, 286.38, 318.17, 337.92, 388.55],
+                60.0: [132.92, 138.51, 142.34, 189.25, 212.71, 346.68, 370.67, 399.82, 459.75],
+                70.0: [150.02, 154.41, 157.44, 216.75, 246.21, 406.98, 423.17, 461.72, 530.95]
+            },
+            nicht: {
+                0.5: [19.78, 20.75, 21.34, 21.68, 22.10, 22.98, 25.22, 29.74, 34.19],
+                1.0: [22.82, 23.78, 24.37, 24.70, 25.09, 28.32, 32.95, 37.44, 43.03],
+                1.5: [25.70, 26.68, 27.26, 27.48, 27.80, 33.42, 40.33, 44.75, 51.45],
+                2.0: [28.58, 29.58, 30.15, 30.26, 30.51, 38.52, 47.71, 52.06, 59.87]
+            }
+        };
+
+        const DRITTLAND_RATES = {
+            zoll: {
+                0.5: [16.93, 20.22, 25.32, 26.97, 28.62, 31.91, 37.00, 40.29],
+                1.0: [23.68, 28.31, 34.17, 36.41, 38.80, 42.69, 49.14, 53.77],
+                1.5: [28.77, 34.45, 40.77, 43.61, 46.45, 50.78, 58.27, 63.96],
+                2.0: [33.86, 40.59, 47.37, 50.81, 54.10, 58.87, 67.40, 74.15],
+                2.5: [38.94, 46.14, 53.96, 58.00, 61.74, 66.96, 76.55, 84.33],
+                3.0: [41.20, 48.69, 57.41, 62.34, 66.83, 72.80, 82.99, 92.87],
+                3.5: [43.46, 51.24, 60.86, 66.68, 71.92, 78.64, 89.43, 101.41],
+                4.0: [45.72, 53.79, 64.31, 71.02, 77.01, 84.48, 95.87, 109.95],
+                4.5: [47.98, 56.34, 67.76, 75.36, 82.10, 90.32, 102.31, 118.49],
+                5.0: [50.24, 58.89, 71.21, 79.70, 87.19, 96.16, 108.75, 127.03],
+                5.5: [52.34, 61.29, 74.36, 83.59, 91.98, 101.55, 114.89, 135.12],
+                6.0: [54.44, 63.69, 77.51, 87.48, 96.77, 106.94, 121.03, 143.21],
+                6.5: [56.54, 66.09, 80.66, 91.37, 101.56, 112.33, 127.17, 151.30],
+                7.0: [58.64, 68.49, 83.81, 95.26, 106.35, 117.72, 133.31, 159.39],
+                7.5: [60.74, 70.89, 86.96, 99.15, 111.14, 123.11, 139.45, 167.48],
+                8.0: [62.84, 73.29, 90.11, 103.04, 115.93, 128.50, 145.59, 175.57],
+                8.5: [64.94, 75.69, 93.26, 106.93, 120.72, 133.89, 151.73, 183.66],
+                9.0: [67.04, 78.09, 96.41, 110.82, 125.51, 139.28, 157.87, 191.75],
+                9.5: [69.14, 80.49, 99.56, 114.71, 130.30, 144.67, 164.01, 199.84],
+                10.0: [71.24, 82.89, 102.71, 118.60, 135.09, 150.06, 170.15, 207.93],
+                11.0: [75.14, 87.41, 108.71, 126.10, 144.09, 160.56, 182.13, 222.91],
+                12.0: [79.04, 91.93, 114.71, 133.60, 153.09, 171.06, 194.11, 237.89],
+                13.0: [82.94, 96.45, 120.71, 141.10, 162.09, 181.56, 206.09, 252.87],
+                14.0: [86.84, 100.97, 126.71, 148.60, 171.09, 192.06, 218.07, 267.85],
+                15.0: [90.74, 105.49, 132.71, 156.10, 180.09, 202.56, 230.05, 282.83],
+                16.0: [94.64, 110.01, 138.71, 163.60, 189.09, 213.06, 242.03, 297.81],
+                17.0: [98.54, 114.53, 144.71, 171.10, 198.09, 223.56, 254.01, 312.79],
+                18.0: [102.44, 119.05, 150.71, 178.60, 207.09, 234.06, 265.99, 327.77],
+                19.0: [106.34, 123.57, 156.71, 186.10, 216.09, 244.56, 277.97, 342.75],
+                20.0: [110.24, 128.09, 162.71, 193.60, 225.09, 255.06, 289.95, 357.73],
+                21.0: [114.14, 132.59, 168.71, 201.08, 234.09, 265.54, 301.93, 372.71],
+                22.0: [118.04, 137.09, 174.71, 208.56, 243.09, 276.02, 313.91, 387.69],
+                23.0: [121.94, 141.59, 180.71, 216.04, 252.09, 286.50, 325.89, 402.67],
+                24.0: [125.84, 146.09, 186.71, 223.52, 261.09, 296.98, 337.87, 417.65],
+                25.0: [129.74, 150.59, 192.71, 231.00, 270.09, 307.46, 349.85, 432.63],
+                26.0: [133.64, 155.09, 198.71, 238.48, 279.09, 317.94, 361.83, 447.61],
+                27.0: [137.54, 159.59, 204.71, 245.96, 288.09, 328.42, 373.81, 462.59],
+                28.0: [141.44, 164.09, 210.71, 253.44, 297.09, 338.90, 385.79, 477.57],
+                29.0: [145.34, 168.59, 216.71, 260.92, 306.09, 349.38, 397.77, 492.55],
+                30.0: [149.24, 173.09, 222.71, 268.40, 315.09, 359.86, 409.75, 507.53],
+                40.0: [183.74, 213.59, 273.61, 339.20, 395.99, 461.76, 525.15, 642.33],
+                50.0: [218.24, 254.09, 324.51, 410.00, 476.89, 563.66, 640.55, 777.13],
+                60.0: [252.74, 294.59, 375.41, 480.80, 557.79, 665.56, 755.95, 911.93],
+                70.0: [287.24, 335.09, 426.31, 551.60, 638.69, 767.46, 871.35, 1046.73]
+            },
+            nicht: {
+                0.5: [16.93, 20.22, 21.87, 23.52, 25.32, 26.97, 30.26, 33.70],
+                1.0: [23.68, 28.31, 30.71, 32.96, 35.51, 37.75, 42.40, 47.18],
+                1.5: [28.77, 34.45, 37.31, 40.16, 43.16, 45.84, 51.54, 57.37],
+                2.0: [33.86, 40.59, 43.91, 47.36, 50.81, 53.93, 60.68, 67.56]
+            }
+        };
+
+        const DOMESTIC_RATES = {
+            3.0: 7.19, 5.0: 8.08, 10.0: 9.87, 15.0: 11.22, 20.0: 12.35, 25.0: 13.47,
+            30.0: 14.59, 40.0: 16.85, 50.0: 19.10, 60.0: 24.23, 70.0: 29.36
+        };
+
+        const ECONOMY_EXPORT_RATES = {
+            1.0: [12.67, 13.38, 14.11, 21.90, 23.32],
+            2.0: [12.96, 13.66, 14.40, 22.26, 23.68],
+            3.0: [13.24, 13.94, 14.68, 22.62, 24.04],
+            4.0: [13.52, 14.22, 14.96, 22.98, 24.40],
+            5.0: [13.80, 14.50, 15.24, 23.34, 24.76],
+            6.0: [14.14, 14.82, 15.58, 23.76, 25.18],
+            7.0: [14.48, 15.14, 15.92, 24.18, 25.60],
+            8.0: [14.82, 15.46, 16.26, 24.60, 26.02],
+            9.0: [15.16, 15.78, 16.60, 25.02, 26.44],
+            10.0: [15.50, 16.10, 16.94, 25.44, 26.86],
+            11.0: [16.05, 16.65, 17.49, 25.99, 27.41],
+            12.0: [16.60, 17.20, 18.04, 26.54, 27.96],
+            13.0: [17.15, 17.75, 18.59, 27.09, 28.51],
+            14.0: [17.70, 18.30, 19.14, 27.64, 29.06],
+            15.0: [18.25, 18.85, 19.69, 28.19, 29.61],
+            16.0: [18.80, 19.40, 20.24, 28.74, 30.16],
+            17.0: [19.35, 19.95, 20.79, 29.29, 30.71],
+            18.0: [19.90, 20.50, 21.34, 29.84, 31.26],
+            19.0: [20.45, 21.05, 21.89, 30.39, 31.81],
+            20.0: [21.00, 21.60, 22.44, 30.94, 32.36],
+            21.0: [21.55, 22.24, 23.13, 31.80, 33.27],
+            22.0: [22.10, 22.88, 23.82, 32.66, 34.18],
+            23.0: [22.65, 23.52, 24.51, 33.52, 35.09],
+            24.0: [23.20, 24.16, 25.20, 34.38, 36.00],
+            25.0: [23.75, 24.80, 25.89, 35.24, 36.91],
+            26.0: [24.30, 25.44, 26.58, 36.10, 37.82],
+            27.0: [24.85, 26.08, 27.27, 36.96, 38.73],
+            28.0: [25.40, 26.72, 27.96, 37.82, 39.64],
+            29.0: [25.95, 27.36, 28.65, 38.68, 40.55],
+            30.0: [26.50, 28.00, 29.34, 39.54, 41.46],
+            40.0: [33.80, 36.60, 38.44, 49.34, 52.16],
+            50.0: [41.10, 45.20, 47.54, 59.14, 62.86],
+            60.0: [48.40, 53.80, 56.64, 68.94, 73.56],
+            70.0: [55.70, 62.40, 65.74, 78.74, 84.26],
+            80.0: [61.30, 68.50, 72.36, 88.22, 95.16],
+            90.0: [66.90, 74.60, 78.98, 97.70, 106.06],
+            100.0: [72.50, 80.70, 85.60, 107.18, 116.96]
+        };
+
+        // Economy Import rates (differs from Export at 70+ kg for zones 1-3)
+        const ECONOMY_IMPORT_RATES = Object.assign({}, ECONOMY_EXPORT_RATES, {
+            70.0: [55.70, 62.40, 65.74, 78.74, 84.26],
+            80.0: [63.10, 70.48, 74.52, 88.22, 95.16],
+            90.0: [70.50, 78.56, 83.30, 97.70, 106.06],
+            100.0: [77.90, 86.64, 92.08, 107.18, 116.96]
+        });
+
+        const ECONOMY_DRITTLAND_RATES = {
+            1.0: [24.09, 18.58, 18.58],
+            2.0: [33.85, 20.65, 20.65],
+            3.0: [37.88, 22.72, 22.72],
+            4.0: [41.91, 24.79, 24.79],
+            5.0: [45.94, 26.86, 26.86],
+            6.0: [48.97, 28.41, 28.41],
+            7.0: [52.00, 29.96, 29.96],
+            8.0: [55.03, 31.51, 31.51],
+            9.0: [58.06, 33.06, 33.06],
+            10.0: [61.09, 34.61, 34.61],
+            11.0: [63.38, 35.65, 35.65],
+            12.0: [65.67, 36.69, 36.69],
+            13.0: [67.96, 37.73, 37.73],
+            14.0: [70.25, 38.77, 38.77],
+            15.0: [72.54, 39.81, 39.81],
+            16.0: [74.83, 40.85, 40.85],
+            17.0: [77.12, 41.89, 41.89],
+            18.0: [79.41, 42.93, 42.93],
+            19.0: [81.70, 43.97, 43.97],
+            20.0: [83.99, 45.01, 45.01],
+            21.0: [86.05, 46.04, 46.04],
+            22.0: [88.11, 47.07, 47.07],
+            23.0: [90.17, 48.10, 48.10],
+            24.0: [92.23, 49.13, 49.13],
+            25.0: [94.29, 50.16, 50.16],
+            26.0: [96.35, 51.19, 51.19],
+            27.0: [98.41, 52.22, 52.22],
+            28.0: [100.47, 53.25, 53.25],
+            29.0: [102.53, 54.28, 54.28],
+            30.0: [104.59, 55.31, 55.31],
+            40.0: [118.79, 63.61, 63.61],
+            50.0: [132.99, 71.91, 71.91],
+            60.0: [147.19, 80.21, 80.21],
+            70.0: [161.39, 88.51, 88.51],
+            80.0: [178.59, 104.49, 104.49],
+            90.0: [195.79, 120.47, 120.47],
+            100.0: [212.99, 136.45, 136.45]
+        };
+
+        // Zone mappings
+        const EXPORT_ZONES = {
+            'AT': 0, 'AD': 5, 'AF': 9, 'AG': 9, 'AI': 9, 'AL': 5, 'AM': 9, 'AO': 9,
+            'AR': 8, 'AS': 9, 'AU': 8, 'AW': 9, 'AZ': 9,
+            'BB': 9, 'BD': 7, 'BE': 2, 'BF': 9, 'BG': 3, 'BH': 8, 'BI': 9, 'BJ': 9,
+            'BM': 9, 'BN': 7, 'BO': 8, 'BR': 8, 'BS': 9, 'BT': 9, 'BW': 9, 'BY': 9, 'BZ': 9,
+            'CA': 6, 'CD': 9, 'CF': 9, 'CG': 9, 'CH': 4, 'CI': 9, 'CK': 9, 'CL': 8,
+            'CM': 9, 'CN': 7, 'CO': 8, 'CR': 8, 'CU': 9, 'CV': 9, 'CY': 3, 'CZ': 1,
+            'DE': 1, 'DJ': 9, 'DK': 3, 'DM': 9, 'DO': 9, 'DZ': 8,
+            'EC': 8, 'EE': 3, 'EG': 8, 'ER': 9, 'ES': 3, 'ET': 9,
+            'FI': 3, 'FJ': 9, 'FK': 9, 'FM': 9, 'FO': 5, 'FR': 2,
+            'GA': 9, 'GB': 2, 'GD': 9, 'GE': 9, 'GF': 8, 'GG': 5, 'GH': 9, 'GI': 5,
+            'GL': 5, 'GM': 9, 'GN': 9, 'GP': 8, 'GQ': 9, 'GR': 3, 'GT': 8, 'GU': 9, 'GW': 9, 'GY': 8,
+            'HN': 8, 'HR': 1, 'HT': 9, 'HU': 1,
+            'IC': 5, 'ID': 7, 'IE': 3, 'IL': 8, 'IN': 7, 'IQ': 9, 'IR': 9, 'IS': 5, 'IT': 1,
+            'JE': 5, 'JM': 9, 'JO': 8, 'JP': 7,
+            'KE': 9, 'KG': 9, 'KH': 7, 'KI': 9, 'KM': 9, 'KN': 9, 'KR': 8, 'KV': 5,
+            'KW': 8, 'KY': 9, 'KZ': 9,
+            'LA': 7, 'LB': 9, 'LC': 9, 'LI': 4, 'LK': 9, 'LR': 9, 'LS': 9, 'LT': 3,
+            'LU': 2, 'LV': 3, 'LY': 9,
+            'MA': 8, 'MC': 2, 'MD': 5, 'ME': 5, 'MG': 9, 'MH': 9, 'MK': 5, 'ML': 9,
+            'MM': 9, 'MN': 9, 'MO': 8, 'MP': 9, 'MQ': 9, 'MR': 9, 'MS': 9, 'MT': 3,
+            'MU': 9, 'MV': 9, 'MW': 9, 'MX': 6, 'MY': 7, 'MZ': 9,
+            'NA': 9, 'NC': 9, 'NE': 9, 'NG': 9, 'NI': 8, 'NL': 2, 'NO': 5, 'NP': 9,
+            'NR': 9, 'NU': 9, 'NZ': 8,
+            'OM': 8, 'PA': 8, 'PE': 8, 'PF': 9, 'PG': 7, 'PH': 8, 'PK': 8, 'PL': 3,
+            'PR': 9, 'PT': 3, 'PW': 9, 'PY': 8,
+            'QA': 8, 'RE': 9, 'RO': 3, 'RS': 5, 'RW': 9,
+            'SA': 8, 'SB': 9, 'SC': 9, 'SD': 9, 'SE': 3, 'SG': 7, 'SH': 9, 'SI': 1,
+            'SK': 1, 'SL': 9, 'SM': 5, 'SN': 9, 'SO': 9, 'SR': 8, 'SS': 9, 'ST': 9,
+            'SV': 8, 'SY': 9, 'SZ': 9,
+            'TD': 9, 'TG': 9, 'TH': 7, 'TJ': 9, 'TL': 9, 'TM': 9, 'TN': 8, 'TO': 9,
+            'TR': 5, 'TT': 9, 'TV': 9, 'TW': 7, 'TZ': 9,
+            'UA': 5, 'UG': 9, 'US': 6, 'UY': 8, 'UZ': 9,
+            'VA': 1, 'VC': 9, 'VE': 9, 'VG': 9, 'VI': 9, 'VN': 7, 'VU': 9,
+            'WS': 9, 'XB': 9, 'XC': 9, 'XE': 9, 'XM': 8, 'XN': 9, 'XS': 9, 'XY': 9,
+            'YE': 9, 'YT': 9, 'ZA': 8, 'ZM': 9, 'ZW': 9,
+            'AE': 8, 'HK': 7
+        };
+
+        const DRITTLAND_ZONES = {
+            'AD': 'EU2', 'AF': 'ROW', 'AG': 'AM2', 'AI': 'AM2', 'AL': 'EU3', 'AM': 'ROW',
+            'AO': 'ROW', 'AR': 'AM3', 'AS': 'AM2', 'AT': 'EU1', 'AU': 'AP2', 'AW': 'AM2', 'AZ': 'ROW',
+            'BB': 'AM2', 'BD': 'AP2', 'BE': 'EU1', 'BF': 'ROW', 'BG': 'EU2', 'BH': 'MA1',
+            'BI': 'ROW', 'BJ': 'ROW', 'BM': 'AM2', 'BN': 'ROW', 'BO': 'AM3', 'BR': 'AM3',
+            'BS': 'AM2', 'BT': 'ROW', 'BW': 'ROW', 'BY': 'ROW', 'BZ': 'AM2',
+            'CA': 'AM1', 'CD': 'ROW', 'CF': 'ROW', 'CG': 'ROW', 'CH': 'EU3', 'CI': 'ROW',
+            'CK': 'ROW', 'CL': 'AM3', 'CM': 'ROW', 'CN': 'AP1', 'CO': 'AM3', 'CR': 'AM2',
+            'CU': 'AM2', 'CV': 'ROW', 'CW': 'AM2', 'CY': 'EU2', 'CZ': 'EU2',
+            'DE': 'EU1', 'DJ': 'ROW', 'DK': 'EU2', 'DM': 'AM2', 'DO': 'AM2', 'DZ': 'ROW',
+            'EC': 'AM3', 'EE': 'EU2', 'EG': 'ROW', 'ER': 'ROW', 'ES': 'EU1', 'ET': 'ROW',
+            'FI': 'EU2', 'FJ': 'ROW', 'FK': 'ROW', 'FM': 'ROW', 'FO': 'EU3', 'FR': 'EU1',
+            'GA': 'ROW', 'GB': 'EU2', 'GD': 'AM2', 'GE': 'ROW', 'GF': 'AM3', 'GG': 'EU3',
+            'GH': 'ROW', 'GI': 'EU3', 'GL': 'EU3', 'GM': 'ROW', 'GN': 'ROW', 'GP': 'AM2',
+            'GQ': 'ROW', 'GR': 'EU2', 'GS': 'AM2', 'GT': 'AM2', 'GU': 'AM2', 'GW': 'ROW', 'GY': 'AM3',
+            'HK': 'AP1', 'HN': 'AM2', 'HR': 'EU2', 'HT': 'AM2', 'HU': 'EU2',
+            'IC': 'EU3', 'ID': 'AP2', 'IE': 'EU1', 'IL': 'EU3', 'IN': 'AP2', 'IQ': 'ROW',
+            'IR': 'ROW', 'IS': 'EU3', 'IT': 'EU1',
+            'JE': 'EU3', 'JM': 'AM2', 'JO': 'ROW', 'JP': 'AP1',
+            'KE': 'ROW', 'KG': 'ROW', 'KH': 'ROW', 'KI': 'ROW', 'KM': 'ROW', 'KN': 'AM2',
+            'KR': 'AP1', 'KV': 'ROW', 'KW': 'MA1', 'KY': 'AM2', 'KZ': 'ROW',
+            'LA': 'ROW', 'LB': 'ROW', 'LC': 'AM2', 'LI': 'EU3', 'LK': 'AP2', 'LR': 'ROW',
+            'LS': 'ROW', 'LT': 'EU2', 'LU': 'EU1', 'LV': 'EU2', 'LY': 'ROW',
+            'MA': 'ROW', 'MC': 'EU1', 'MD': 'ROW', 'ME': 'EU3', 'MG': 'ROW', 'MH': 'AM2',
+            'MK': 'EU3', 'ML': 'ROW', 'MM': 'ROW', 'MN': 'ROW', 'MO': 'AP1', 'MP': 'AM2',
+            'MQ': 'AM2', 'MR': 'ROW', 'MS': 'AM2', 'MT': 'EU2', 'MU': 'ROW', 'MV': 'ROW',
+            'MW': 'ROW', 'MX': 'AM1', 'MY': 'AP1', 'MZ': 'ROW',
+            'NA': 'ROW', 'NC': 'ROW', 'NE': 'ROW', 'NG': 'ROW', 'NI': 'AM2', 'NL': 'EU1',
+            'NO': 'EU3', 'NP': 'ROW', 'NR': 'ROW', 'NU': 'ROW', 'NZ': 'AP2',
+            'OM': 'MA1', 'PA': 'AM2', 'PE': 'AM3', 'PF': 'ROW', 'PG': 'ROW', 'PH': 'AP2',
+            'PK': 'ROW', 'PL': 'EU2', 'PR': 'AM2', 'PT': 'EU1', 'PW': 'AM2', 'PY': 'AM3',
+            'QA': 'MA1', 'RE': 'ROW', 'RO': 'EU2', 'RS': 'EU3', 'RW': 'ROW',
+            'SA': 'MA1', 'SB': 'ROW', 'SC': 'ROW', 'SD': 'ROW', 'SE': 'EU2', 'SG': 'AP1',
+            'SH': 'ROW', 'SI': 'EU2', 'SK': 'EU2', 'SL': 'ROW', 'SM': 'EU1', 'SN': 'ROW',
+            'SO': 'ROW', 'SR': 'AM3', 'SS': 'ROW', 'ST': 'ROW', 'SV': 'AM2', 'SX': 'AM2',
+            'SY': 'ROW', 'SZ': 'ROW',
+            'TC': 'AM2', 'TD': 'ROW', 'TG': 'ROW', 'TH': 'AP1', 'TJ': 'ROW', 'TL': 'ROW',
+            'TM': 'ROW', 'TN': 'ROW', 'TO': 'ROW', 'TR': 'EU3', 'TT': 'AM2', 'TV': 'ROW',
+            'TW': 'AP1', 'TZ': 'ROW',
+            'UA': 'ROW', 'UG': 'ROW', 'US': 'AM1', 'UY': 'AM3', 'UZ': 'ROW',
+            'VA': 'EU1', 'VC': 'AM2', 'VE': 'AM3', 'VG': 'AM2', 'VI': 'AM2', 'VN': 'AP2',
+            'VU': 'ROW', 'WS': 'ROW',
+            'XB': 'AM2', 'XC': 'AM2', 'XE': 'AM2', 'XM': 'AM2', 'XN': 'AM2', 'XS': 'ROW', 'XY': 'AM2',
+            'YE': 'ROW', 'YT': 'ROW', 'ZA': 'MA1', 'ZM': 'ROW', 'ZW': 'ROW',
+            'AE': 'MA1'
+        };
+
+        const ECONOMY_EXPORT_ZONES = {
+            'AT': 0, 'DE': 1, 'IT': 1, 'HR': 1, 'SK': 1, 'SI': 1, 'HU': 1, 'VA': 1, 'CZ': 1,
+            'BE': 2, 'FR': 2, 'NL': 2, 'LU': 2, 'MC': 2, 'GB': 2,
+            'BG': 3, 'DK': 3, 'EE': 3, 'FI': 3, 'GR': 3, 'IE': 3, 'LV': 3, 'LT': 3,
+            'MT': 3, 'PL': 3, 'PT': 3, 'RO': 3, 'SE': 3, 'ES': 3,
+            'CH': 4, 'LI': 4,
+            'AL': 5, 'BA': 5, 'MK': 5, 'ME': 5, 'RS': 5, 'UA': 5, 'NO': 5, 'TR': 5, 'SM': 5
+        };
+
+        const ECONOMY_DRITTLAND_ZONES = {
+            'AT': 1, 'DE': 1, 'BE': 1, 'FR': 1, 'NL': 1, 'LU': 1, 'MC': 1, 'IE': 1,
+            'PT': 1, 'ES': 1, 'IT': 1, 'VA': 1, 'SM': 1,
+            'BG': 2, 'HR': 2, 'CZ': 2, 'DK': 2, 'EE': 2, 'FI': 2, 'GR': 2, 'HU': 2,
+            'LV': 2, 'LT': 2, 'MT': 2, 'PL': 2, 'RO': 2, 'SK': 2, 'SI': 2, 'SE': 2,
+            'GB': 1,
+            'AL': 3, 'BA': 3, 'CH': 3, 'IS': 3, 'LI': 3, 'MK': 3, 'ME': 3, 'NO': 3,
+            'RS': 3, 'TR': 3, 'GI': 3, 'FO': 3, 'GG': 3, 'JE': 3,
+            'CA': 0, 'MX': 0, 'US': 0
+        };
+
+        // Third Country zone matrix
+        const DRITTLAND_MATRIX = {
+            'EU1': { 'EU1': 'A', 'EU2': 'B', 'EU3': 'C', 'AP1': 'D', 'AP2': 'E', 'AM1': 'D', 'AM2': 'E', 'AM3': 'F', 'MA1': 'D', 'ROW': 'F' },
+            'EU2': { 'EU1': 'B', 'EU2': 'B', 'EU3': 'C', 'AP1': 'E', 'AP2': 'E', 'AM1': 'E', 'AM2': 'F', 'AM3': 'F', 'MA1': 'D', 'ROW': 'F' },
+            'EU3': { 'EU1': 'C', 'EU2': 'C', 'EU3': 'C', 'AP1': 'E', 'AP2': 'F', 'AM1': 'F', 'AM2': 'F', 'AM3': 'F', 'MA1': 'E', 'ROW': 'G' },
+            'AP1': { 'EU1': 'E', 'EU2': 'F', 'EU3': 'F', 'AP1': 'C', 'AP2': 'D', 'AM1': 'D', 'AM2': 'G', 'AM3': 'G', 'MA1': 'F', 'ROW': 'H' },
+            'AP2': { 'EU1': 'F', 'EU2': 'F', 'EU3': 'G', 'AP1': 'C', 'AP2': 'D', 'AM1': 'G', 'AM2': 'H', 'AM3': 'H', 'MA1': 'F', 'ROW': 'H' },
+            'AM1': { 'EU1': 'D', 'EU2': 'E', 'EU3': 'F', 'AP1': 'C', 'AP2': 'F', 'AM1': 'C', 'AM2': 'E', 'AM3': 'E', 'MA1': 'G', 'ROW': 'H' },
+            'AM2': { 'EU1': 'E', 'EU2': 'F', 'EU3': 'G', 'AP1': 'F', 'AP2': 'H', 'AM1': 'D', 'AM2': 'E', 'AM3': 'F', 'MA1': 'G', 'ROW': 'H' },
+            'AM3': { 'EU1': 'E', 'EU2': 'F', 'EU3': 'F', 'AP1': 'F', 'AP2': 'H', 'AM1': 'E', 'AM2': 'E', 'AM3': 'E', 'MA1': 'G', 'ROW': 'H' },
+            'MA1': { 'EU1': 'E', 'EU2': 'E', 'EU3': 'E', 'AP1': 'E', 'AP2': 'E', 'AM1': 'G', 'AM2': 'G', 'AM3': 'G', 'MA1': 'D', 'ROW': 'G' },
+            'ROW': { 'EU1': 'E', 'EU2': 'E', 'EU3': 'G', 'AP1': 'G', 'AP2': 'G', 'AM1': 'G', 'AM2': 'H', 'AM3': 'H', 'MA1': 'G', 'ROW': 'H' }
+        };
+
+        const ECONOMY_DRITTLAND_MATRIX = {
+            1: { 1: 'A', 2: 'B', 3: 'C' },
+            2: { 1: 'B', 2: 'B', 3: 'C' },
+            3: { 1: 'C', 2: 'C', 3: 'C' }
+        };
+
+        // EU member states (for VAT determination)
+        const EU_COUNTRIES = new Set([
+            'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR',
+            'DE','GR','HU','IE','IT','LV','LT','LU','MT','NL',
+            'PL','PT','RO','SK','SI','ES','SE'
+        ]);
+
+        // Premium surcharges
+        const PREMIUM_SURCHARGES = {
+            'none': 0.00,
+            '900': 35.00,
+            '1030': 10.00,
+            '1200': 5.00
+        };
+
+        // ==================== EVENT LISTENERS ====================
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById('originCountry').value = e.target.dataset.origin;
+            });
+        });
+
+        ['length', 'width', 'height'].forEach(id => {
+            document.getElementById(id).addEventListener('change', calculateVolumetricWeight);
+        });
+
+        document.querySelectorAll('[data-customs]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('[data-customs]').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById('customsStatus').value = e.target.dataset.customs;
+            });
+        });
+
+        document.querySelectorAll('[data-service]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('[data-service]').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById('serviceType').value = e.target.dataset.service;
+            });
+        });
+
+        // ==================== HELPER FUNCTIONS ====================
+        function calculateVolumetricWeight() {
+            const l = parseFloat(document.getElementById('length').value) || 0;
+            const w = parseFloat(document.getElementById('width').value) || 0;
+            const h = parseFloat(document.getElementById('height').value) || 0;
+            const volumetric = (l * w * h) / 5000;
+            document.getElementById('volumetricWeight').textContent = volumetric.toFixed(2);
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function clearError() {
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        function getExportZone(country) {
+            return EXPORT_ZONES[country] !== undefined ? EXPORT_ZONES[country] : null;
+        }
+
+        function getThirdCountryZone(country) {
+            return DRITTLAND_ZONES[country] || 'ROW';
+        }
+
+        function getEconomyExportZone(country) {
+            return ECONOMY_EXPORT_ZONES[country] !== undefined ? ECONOMY_EXPORT_ZONES[country] : null;
+        }
+
+        function getEconomyThirdCountryZone(country) {
+            return ECONOMY_DRITTLAND_ZONES[country] !== undefined ? ECONOMY_DRITTLAND_ZONES[country] : 3;
+        }
+
+        function getThirdCountryTariffZone(originZone, destZone) {
+            return DRITTLAND_MATRIX[originZone] ? DRITTLAND_MATRIX[originZone][destZone] : null;
+        }
+
+        function getEconomyThirdCountryTariffZone(originZone, destZone) {
+            return ECONOMY_DRITTLAND_MATRIX[originZone] ? ECONOMY_DRITTLAND_MATRIX[originZone][destZone] : 'C';
+        }
+
+        // Continuation rates per 0.5 kg (for weights between table entries up to 30 kg)
+        // and per 1 kg (for weights 30.1-70, 70.1-300, 300.1+)
+        const CONT_RATES = {
+            export: {
+                '10_20_half': [0.56, 0.63, 0.70, 0.75, 0.87, 1.30, 1.49, 1.53, 1.75],
+                '20_30_half': [0.55, 0.63, 0.73, 0.83, 0.84, 1.33, 1.53, 1.57, 1.81],
+                '30_70': [1.97, 1.88, 1.82, 2.39, 2.91, 5.25, 4.56, 5.38, 6.19],
+                '70_300': [2.37, 2.39, 2.44, 2.97, 3.17, 5.51, 5.77, 6.17, 7.11],
+                '300_up': [2.95, 3.01, 3.09, 3.23, 3.23, 6.03, 6.47, 6.81, 7.85]
+            },
+            import: {
+                '10_20_half': [0.64, 0.72, 0.81, 0.87, 1.00, 1.50, 1.71, 1.76, 2.01],
+                '20_30_half': [0.64, 0.73, 0.82, 0.96, 0.96, 1.53, 1.99, 1.80, 2.08],
+                '30_70': [1.71, 1.59, 1.51, 2.75, 3.35, 6.03, 5.25, 6.19, 7.12],
+                '70_300': [2.37, 2.39, 2.44, 3.41, 3.64, 6.34, 6.64, 7.09, 8.18],
+                '300_up': [2.95, 3.01, 3.09, 3.71, 3.71, 6.93, 7.45, 7.83, 9.02]
+            },
+            drittland: {
+                '10_20_half': [1.95, 2.26, 3.00, 3.75, 4.50, 5.25, 5.99, 7.49],
+                '20_30_half': [1.95, 2.25, 3.00, 3.74, 4.50, 5.24, 5.99, 7.49],
+                '30_70': [3.45, 4.05, 5.09, 7.08, 8.09, 10.19, 11.54, 13.48],
+                '70_300': [3.45, 4.05, 5.09, 7.08, 8.09, 10.19, 11.54, 13.48],
+                '300_up': [3.98, 4.67, 5.88, 7.78, 9.34, 11.76, 13.32, 15.57]
+            },
+            economy_export: {
+                '30_70': [0.73, 0.86, 0.91, 0.98, 1.07],
+                '70_300': [2.80, 3.05, 3.31, 4.74, 5.45],
+                '300_up': [5.95, 6.11, 6.21, 6.21, 6.21]
+            },
+            economy_import: {
+                '30_70': [0.73, 0.86, 0.91, 0.98, 1.07],
+                '70_300': [3.70, 4.04, 4.39, 4.74, 5.45],
+                '300_up': [4.39, 4.74, 5.10, 5.45, 6.17]
+            }
+        };
+
+        function getFloorWeight(weight, ratesObj) {
+            const weights = Object.keys(ratesObj).map(Number).sort((a, b) => a - b);
+            let floor = weights[0];
+            for (let w of weights) {
+                if (w <= weight) floor = w;
+                else break;
+            }
+            return floor;
+        }
+
+        function getPriceForWeight(weight, zoneIndex, rates, service = 'express', rateType = 'export') {
+            if (weight <= 0) return 0;
+
+            const isEconomy = rateType.startsWith('economy');
+            const allWeights = Object.keys(rates).map(Number).sort((a, b) => a - b);
+            const floorW = getFloorWeight(weight, rates);
+
+            // Exact match in table → use directly
+            if (rates[floorW] !== undefined && Math.abs(weight - floorW) < 0.001) {
+                return rates[floorW][zoneIndex];
+            }
+
+            // ---- ECONOMY: table-first approach with linear interpolation ----
+            if (isEconomy) {
+                let ceilW = null;
+                for (let w of allWeights) { if (w > weight) { ceilW = w; break; } }
+
+                if (ceilW !== null) {
+                    // Interpolate between floor and ceiling table entries
+                    const fP = rates[floorW][zoneIndex];
+                    const cP = rates[ceilW][zoneIndex];
+                    return fP + (weight - floorW) * (cP - fP) / (ceilW - floorW);
+                }
+
+                // Above max table entry: extrapolate from last two table entries
+                if (allWeights.length >= 2) {
+                    const w1 = allWeights[allWeights.length - 2];
+                    const w2 = allWeights[allWeights.length - 1];
+                    const perKg = (rates[w2][zoneIndex] - rates[w1][zoneIndex]) / (w2 - w1);
+                    return rates[w2][zoneIndex] + (weight - w2) * perKg;
+                }
+                return rates[allWeights[allWeights.length - 1]][zoneIndex];
+            }
+
+            // ---- EXPRESS / IMPORT / DRITTLAND: continuation rate approach ----
+            if (weight <= 30) {
+                // Floor tier price + continuation rate × extra 0.5 kg steps
+                const basePrice = rates[floorW][zoneIndex];
+                const extra = weight - floorW;
+                const steps = Math.ceil(extra / 0.5);
+
+                let contKey;
+                if (floorW >= 20) contKey = '20_30_half';
+                else if (floorW >= 10) contKey = '10_20_half';
+                else {
+                    // Below 10 kg, table has 0.5 kg increments — round up to next tier
+                    for (let w of allWeights) { if (weight <= w) return rates[w][zoneIndex]; }
+                    return rates[allWeights[allWeights.length - 1]][zoneIndex];
+                }
+
+                const cont = CONT_RATES[rateType]?.[contKey];
+                if (!cont) {
+                    for (let w of allWeights) { if (weight <= w) return rates[w][zoneIndex]; }
+                    return rates[allWeights[allWeights.length - 1]][zoneIndex];
+                }
+
+                return basePrice + steps * cont[zoneIndex];
+            }
+
+            // Above 30 kg: use continuation rates per 1 kg
+            const cont = CONT_RATES[rateType] || CONT_RATES.export;
+            if (weight <= 70) {
+                return rates[30][zoneIndex] + (weight - 30) * cont['30_70'][zoneIndex];
+            } else if (weight <= 300) {
+                return rates[70][zoneIndex] + (weight - 70) * cont['70_300'][zoneIndex];
+            } else {
+                return rates[70][zoneIndex] + (weight - 70) * cont['300_up'][zoneIndex];
+            }
+        }
+
+        function getDomesticPrice(weight) {
+            const weights = [3.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0, 60.0, 70.0];
+            for (let w of weights) {
+                if (weight <= w) return DOMESTIC_RATES[w];
+            }
+            // For weights > 70kg: 70kg price + continuation rate
+            return DOMESTIC_RATES[70.0] + (weight - 70) * 0.72;
+        }
+
+        function calculatePrice() {
+            clearError();
+
+            const origin = document.getElementById('originCountry').value.toUpperCase();
+            const destination = document.getElementById('destinationCountry').value.toUpperCase();
+            const service = document.getElementById('serviceType').value;
+            const actualWeight = parseFloat(document.getElementById('actualWeight').value) || 0;
+            const volumetric = parseFloat(document.getElementById('volumetricWeight').textContent) || 0;
+            // DHL rounds chargeable weight: Express to nearest 0.5 kg, Economy to nearest 1 kg
+            const rawBillable = Math.max(actualWeight, volumetric);
+            const billableWeight = service === 'economy'
+                ? Math.ceil(rawBillable)
+                : Math.ceil(rawBillable * 2) / 2;
+            const customsStatus = document.getElementById('customsStatus').value;
+            const premiumValue = document.querySelector('input[name="premium"]:checked').value;
+            const premiumSurcharge = PREMIUM_SURCHARGES[premiumValue];
+
+            // Validation
+            if (!destination) {
+                showError('Please select a destination country');
+                return;
+            }
+            if (billableWeight <= 0) {
+                showError('Please enter weight or dimensions');
+                return;
+            }
+
+            // Sofia → Switzerland: force Express, block Economy
+            if (origin === 'BG' && destination === 'CH' && service === 'economy') {
+                showError('Sofia → Switzerland is Express only. Economy is not available for this route.');
+                return;
+            }
+
+            // === Shared values ===
+            const expressFuelPct = parseFloat(document.getElementById('fuelSurcharge').value) || 0;
+            const economyFuelPct = parseFloat(document.getElementById('economyFuelSurcharge').value) || 0;
+            const demandPerKg = parseFloat(document.getElementById('demandSurcharge').value) || 0;
+            const dimL = parseFloat(document.getElementById('length').value) || 0;
+            const dimW = parseFloat(document.getElementById('width').value) || 0;
+            const dimH = parseFloat(document.getElementById('height').value) || 0;
+            const dims = [dimL, dimW, dimH].sort((a, b) => b - a);
+            const isOversize = dims[0] > 100 || dims[1] > 80;
+            const isOverweight = actualWeight > 70;
+            const isNonConveyable = actualWeight > 25 || dims[0] > 120;
+            const isNonStackable = document.getElementById('nonStackableCheck').checked;
+            const fmt = (v) => '€' + v.toFixed(2);
+
+            // Helper: calculate surcharges for a given base price and service type
+            function calcSurcharges(base, svc, premium = 0) {
+                const fuelPct = svc === 'economy' ? economyFuelPct : expressFuelPct;
+                const ncp = isNonConveyable ? 20.00 : 0;
+                const fuelBase = base + premium + ncp; // DHL applies fuel on base + premium + NCP
+                const fuel = fuelBase * (fuelPct / 100);
+                const demand = demandPerKg * billableWeight;
+                const oversize = isOversize ? base * 0.50 : 0;
+                const nonStack = isNonStackable ? base * 0.50 : 0;
+                const overwt = isOverweight ? (svc === 'economy' ? 55.00 : 35.00) : 0;
+                return { fuel, fuelPct, ncp, demand, oversize, nonStack, overwt, total: fuel + ncp + demand + oversize + nonStack + overwt };
+            }
+
+            // Helper: build surcharge rows for breakdown
+            function surchargeRows(sc, svc) {
+                let rows = [];
+                if (sc.ncp > 0) {
+                    const ncpReason = actualWeight > 25 ? `${actualWeight.toFixed(1)} kg > 25 kg` : `${dims[0]} cm > 120 cm`;
+                    rows.push({label: `Non-Conveyable Piece (${ncpReason})`, value: sc.ncp});
+                }
+                if (sc.fuel > 0) rows.push({label: `Fuel (${sc.fuelPct}%)`, value: sc.fuel});
+                if (sc.demand > 0) rows.push({label: `Demand (€${demandPerKg.toFixed(2)}/kg)`, value: sc.demand});
+                if (sc.oversize > 0) {
+                    const reason = dims[0] > 100 ? dims[0] + 'cm longest' : dims[1] + 'cm 2nd side';
+                    rows.push({label: `Oversize (${reason})`, value: sc.oversize});
+                }
+                if (sc.nonStack > 0) rows.push({label: 'Non-Stackable (+50%)', value: sc.nonStack});
+                if (sc.overwt > 0) rows.push({label: `Overweight (${actualWeight.toFixed(0)} kg)`, value: sc.overwt});
+                return rows;
+            }
+
+            // ========== TWO-LEG ROUTE: Sofia → Hall → Destination ==========
+            if (origin === 'BG-VIA-AT') {
+                // --- LEG 1: BG → AT (Economy Import, always Within EU) ---
+                const leg1Zone = getEconomyExportZone('BG');
+                if (leg1Zone === null) { showError('BG not in Economy zone list'); return; }
+                const leg1UseNicht = billableWeight <= 2.0; // BG→AT is always Within EU
+                const leg1Rates = ECONOMY_IMPORT_RATES;
+                const leg1Base = getPriceForWeight(billableWeight, leg1Zone, leg1Rates, 'economy', 'economy_import');
+                const leg1Sc = calcSurcharges(leg1Base, 'economy');
+                const leg1Total = leg1Base + leg1Sc.total;
+
+                // --- LEG 2: AT → Destination (user's chosen service) ---
+                if (destination === 'AT') { showError('For Sofia → Austria, use "Sofia, BG" as origin instead'); return; }
+
+                const leg2Zone = service === 'express' ? getExportZone(destination) : getEconomyExportZone(destination);
+                if (leg2Zone === null) { showError('Destination country not in zone list'); return; }
+                let leg2UseNicht = false;
+                if (customsStatus === 'nicht' && billableWeight <= 2.0) leg2UseNicht = true;
+                const leg2Rates = service === 'express'
+                    ? (leg2UseNicht ? EXPORT_RATES.nicht : EXPORT_RATES.zoll)
+                    : ECONOMY_EXPORT_RATES;
+                const leg2Rt = service === 'express' ? 'export' : 'economy_export';
+                const leg2Base = getPriceForWeight(billableWeight, leg2Zone, leg2Rates, service, leg2Rt);
+                const leg2Premium = premiumSurcharge;
+                const leg2Sc = calcSurcharges(leg2Base, service, leg2Premium);
+                const leg2Total = leg2Base + leg2Premium + leg2Sc.total;
+
+                const grandTotal = leg1Total + leg2Total;
+
+                // --- Build breakdown ---
+                let html = '';
+                // Leg 1 header
+                html += '<div style="font-size:0.8em;font-weight:700;color:#D40511;padding:6px 0 4px;border-bottom:1px solid #D40511;margin-bottom:4px;">Leg 1: Sofia → Hall in Tirol (Economy Import)</div>';
+                html += `<div class="breakdown-row"><span>Base Rate (Zone ${leg1Zone}, ${billableWeight.toFixed(2)} kg)</span><span>${fmt(leg1Base)}</span></div>`;
+                surchargeRows(leg1Sc, 'economy').forEach(r => {
+                    html += `<div class="breakdown-row" style="color:#666;font-size:0.9em;"><span>&nbsp;&nbsp;${r.label}</span><span>${fmt(r.value)}</span></div>`;
+                });
+                html += `<div class="breakdown-row" style="font-weight:600;border-top:1px dashed #ccc;"><span>Leg 1 Subtotal</span><span>${fmt(leg1Total)}</span></div>`;
+
+                // Leg 2 header
+                const leg2ServiceLabel = service === 'express' ? 'Express Export' : 'Economy Export';
+                const destName = window.getDestName ? window.getDestName(destination) : destination;
+                html += `<div style="font-size:0.8em;font-weight:700;color:#D40511;padding:10px 0 4px;border-bottom:1px solid #D40511;margin-bottom:4px;">Leg 2: Hall in Tirol → ${destName} (${leg2ServiceLabel})</div>`;
+                html += `<div class="breakdown-row"><span>Base Rate (Zone ${leg2Zone}, ${billableWeight.toFixed(2)} kg)</span><span>${fmt(leg2Base)}</span></div>`;
+                if (leg2Premium > 0) {
+                    const premLabel = document.querySelector('.premium-btn.active')?.textContent || '';
+                    html += `<div class="breakdown-row"><span>Premium ${premLabel}</span><span>${fmt(leg2Premium)}</span></div>`;
+                }
+                surchargeRows(leg2Sc, service).forEach(r => {
+                    html += `<div class="breakdown-row" style="color:#666;font-size:0.9em;"><span>&nbsp;&nbsp;${r.label}</span><span>${fmt(r.value)}</span></div>`;
+                });
+                html += `<div class="breakdown-row" style="font-weight:600;border-top:1px dashed #ccc;"><span>Leg 2 Subtotal</span><span>${fmt(leg2Total)}</span></div>`;
+
+                // Mandatory Sofia fee
+                const neutralDelivery = 5.00;
+                html += `<div class="breakdown-row"><span>Neutral Delivery (Sofia)</span><span>${fmt(neutralDelivery)}</span></div>`;
+
+                // Grand total with conditional VAT (only if both origin & destination are EU)
+                const subtotalExVAT = grandTotal + neutralDelivery;
+                const isIntraEU = EU_COUNTRIES.has('BG') && EU_COUNTRIES.has(destination);
+                const vatAmount = isIntraEU ? subtotalExVAT * 0.20 : 0;
+                const totalAfterVAT = subtotalExVAT + vatAmount;
+                const logisticsFee = totalAfterVAT * 0.30;
+                const finalTotal = totalAfterVAT + logisticsFee;
+
+                html += `<div class="breakdown-row" style="border-top:1px dashed #ccc; padding-top:4px;"><span>Subtotal (ex-VAT)</span><span>${fmt(subtotalExVAT)}</span></div>`;
+                if (isIntraEU) {
+                    html += `<div class="breakdown-row"><span>VAT (20%)</span><span>${fmt(vatAmount)}</span></div>`;
+                } else {
+                    html += `<div class="breakdown-row" style="color:#888;"><span>VAT (0% — export outside EU)</span><span>${fmt(0)}</span></div>`;
+                }
+                html += `<div class="breakdown-row breakdown-total"><span>Combined Total${isIntraEU ? ' (incl. VAT)' : ' (ex-VAT)'}</span><span>${fmt(totalAfterVAT)}</span></div>`;
+                html += `<div class="breakdown-row" style="padding-top:6px;"><span>Logistics Service Fee</span><span>${fmt(logisticsFee)}</span></div>`;
+                html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#D40511; color:#FFCC00; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
+
+                const breakdownEl = document.getElementById('priceBreakdown');
+                breakdownEl.innerHTML = html;
+                breakdownEl.style.display = 'block';
+                document.getElementById('emailQuoteSection').style.display = 'block';
+                document.getElementById('totalPrice').textContent = fmt(finalTotal);
+
+                document.getElementById('zoneInfo').style.display = 'block';
+                document.getElementById('serviceInfo').textContent = `Via Hall: Economy Import + ${leg2ServiceLabel}`;
+                document.getElementById('zoneValue').textContent = `Leg 1: BG→AT Zone ${leg1Zone} | Leg 2: AT→${destination} Zone ${leg2Zone}`;
+                document.getElementById('billableWeight').textContent = `Billable Weight: ${billableWeight.toFixed(2)} kg`;
+                return;
+            }
+
+            // ========== STANDARD SINGLE-LEG ROUTES ==========
+            let basePrice = 0;
+            let serviceType = '';
+            let zoneInfo = '';
+
+            if (origin === destination) {
+                serviceType = 'Domestic (Austria)';
+                basePrice = getDomesticPrice(billableWeight);
+                zoneInfo = `Domestic shipment within Austria`;
+            } else if (origin === 'AT') {
+                const zone = service === 'express' ? getExportZone(destination) : getEconomyExportZone(destination);
+                if (zone === null) { showError(`Destination country not in zone list`); return; }
+                let useNicht = false;
+                if (customsStatus === 'nicht' && billableWeight <= 2.0) useNicht = true;
+                const rates = service === 'express'
+                    ? (useNicht ? EXPORT_RATES.nicht : EXPORT_RATES.zoll)
+                    : ECONOMY_EXPORT_RATES;
+                const rt = service === 'express' ? 'export' : 'economy_export';
+                basePrice = getPriceForWeight(billableWeight, zone, rates, service, rt);
+                serviceType = service === 'express' ? 'Express Export' : 'Economy Select Export';
+                zoneInfo = `Zone ${zone}, ${useNicht ? 'Within EU' : 'Outside EU'}`;
+            } else if (destination === 'AT') {
+                const zone = service === 'express' ? getExportZone(origin) : getEconomyExportZone(origin);
+                if (zone === null) { showError(`Origin country not in zone list`); return; }
+                let useNicht = false;
+                if (customsStatus === 'nicht' && billableWeight <= 2.0) useNicht = true;
+                const rates = service === 'express'
+                    ? (useNicht ? IMPORT_RATES.nicht : IMPORT_RATES.zoll)
+                    : ECONOMY_IMPORT_RATES;
+                const importRt = service === 'express' ? 'import' : 'economy_import';
+                basePrice = getPriceForWeight(billableWeight, zone, rates, service, importRt);
+                serviceType = service === 'express' ? 'Express Import' : 'Economy Select Import';
+                zoneInfo = `Zone ${zone}, ${useNicht ? 'Within EU' : 'Outside EU'}`;
+            } else {
+                if (service === 'express') {
+                    const originZone = getThirdCountryZone(origin);
+                    const destZone = getThirdCountryZone(destination);
+                    const tariffZone = getThirdCountryTariffZone(originZone, destZone);
+                    if (!tariffZone) { showError(`Third Country route not available`); return; }
+                    const zoneIndex = tariffZone.charCodeAt(0) - 65;
+                    let useNicht = false;
+                    if (customsStatus === 'nicht' && billableWeight <= 2.0) useNicht = true;
+                    const rates = useNicht ? DRITTLAND_RATES.nicht : DRITTLAND_RATES.zoll;
+                    basePrice = getPriceForWeight(billableWeight, zoneIndex, rates, service, 'drittland');
+                    serviceType = 'Express Third Country';
+                    zoneInfo = `${originZone} → ${destZone} = Zone ${tariffZone}, ${useNicht ? 'Within EU' : 'Outside EU'}`;
+                } else {
+                    const originZone = getEconomyThirdCountryZone(origin);
+                    const destZone = getEconomyThirdCountryZone(destination);
+                    const tariffZone = getEconomyThirdCountryTariffZone(originZone, destZone);
+                    const zoneIndex = tariffZone.charCodeAt(0) - 65;
+                    let useNicht = false;
+                    if (customsStatus === 'nicht' && billableWeight <= 2.0) useNicht = true;
+                    const rates = useNicht ? DRITTLAND_RATES.nicht : ECONOMY_DRITTLAND_RATES;
+                    basePrice = getPriceForWeight(billableWeight, zoneIndex, rates, service, 'economy_export');
+                    serviceType = 'Economy Select Third Country';
+                    zoneInfo = `Zone ${originZone} → Zone ${destZone} = Tariff ${tariffZone}, ${useNicht ? 'Within EU' : 'Outside EU'}`;
+                }
+            }
+
+            // === Single-leg surcharges & breakdown ===
+            const sc = calcSurcharges(basePrice, service, premiumSurcharge);
+            const neutralDelivery = (origin === 'BG') ? 5.00 : 0;
+            const subtotalExVAT = basePrice + premiumSurcharge + sc.total + neutralDelivery;
+
+            // VAT only when both origin AND destination are within the EU
+            const isIntraEU = EU_COUNTRIES.has(origin) && EU_COUNTRIES.has(destination);
+            const vatAmount = isIntraEU ? subtotalExVAT * 0.20 : 0;
+            const totalAfterVAT = subtotalExVAT + vatAmount;
+            const logisticsFee = totalAfterVAT * 0.30;
+            const finalTotal = totalAfterVAT + logisticsFee;
+
+            let rows = [];
+            rows.push({label: `Base Rate (${billableWeight.toFixed(2)} kg)`, value: basePrice});
+            if (premiumSurcharge > 0) {
+                const premLabel = document.querySelector('.premium-btn.active')?.textContent || '';
+                rows.push({label: `Premium ${premLabel}`, value: premiumSurcharge});
+            }
+            const scRows = surchargeRows(sc, service);
+
+            let html = '';
+            rows.forEach(r => {
+                html += `<div class="breakdown-row"><span>${r.label}</span><span>${fmt(r.value)}</span></div>`;
+            });
+            if (scRows.length > 0) {
+                html += '<div style="font-size:0.75em;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;padding:8px 0 2px;">Surcharges</div>';
+                scRows.forEach(r => {
+                    html += `<div class="breakdown-row"><span>${r.label}</span><span>${fmt(r.value)}</span></div>`;
+                });
+            }
+            if (neutralDelivery > 0) {
+                html += '<div style="font-size:0.75em;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;padding:8px 0 2px;">Mandatory Services (Sofia)</div>';
+                html += `<div class="breakdown-row"><span>Neutral Delivery</span><span>${fmt(neutralDelivery)}</span></div>`;
+            }
+            html += `<div class="breakdown-row" style="border-top:1px dashed #ccc; padding-top:4px;"><span>Subtotal (ex-VAT)</span><span>${fmt(subtotalExVAT)}</span></div>`;
+            if (isIntraEU) {
+                html += `<div class="breakdown-row"><span>VAT (20%)</span><span>${fmt(vatAmount)}</span></div>`;
+            } else {
+                html += `<div class="breakdown-row" style="color:#888;"><span>VAT (0% — export outside EU)</span><span>${fmt(0)}</span></div>`;
+            }
+            html += `<div class="breakdown-row breakdown-total"><span>Total${isIntraEU ? ' (incl. VAT)' : ' (ex-VAT)'}</span><span>${fmt(totalAfterVAT)}</span></div>`;
+            html += `<div class="breakdown-row" style="padding-top:6px;"><span>Logistics Service Fee</span><span>${fmt(logisticsFee)}</span></div>`;
+            html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#D40511; color:#FFCC00; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
+
+            const breakdownEl = document.getElementById('priceBreakdown');
+            breakdownEl.innerHTML = html;
+            breakdownEl.style.display = 'block';
+            document.getElementById('emailQuoteSection').style.display = 'block';
+            document.getElementById('totalPrice').textContent = fmt(finalTotal);
+
+            document.getElementById('zoneInfo').style.display = 'block';
+            document.getElementById('serviceInfo').textContent = serviceType;
+            document.getElementById('zoneValue').textContent = zoneInfo;
+            document.getElementById('billableWeight').textContent = `Billable Weight: ${billableWeight.toFixed(2)} kg`;
+        }
+
+        // ==================== SETTINGS (localStorage) ====================
+        function saveSettings() {
+            const expressFuel = parseFloat(document.getElementById('settingsExpressFuel').value) || 0;
+            const economyFuel = parseFloat(document.getElementById('settingsEconomyFuel').value) || 0;
+            const demand = parseFloat(document.getElementById('settingsDemand').value) || 0;
+            const now = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+
+            const settings = { expressFuel, economyFuel, demand, updatedAt: now };
+            localStorage.setItem('dhlPricingSettings', JSON.stringify(settings));
+
+            applySettings(settings);
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function applySettings(s) {
+            document.getElementById('fuelSurcharge').value = s.expressFuel;
+            document.getElementById('economyFuelSurcharge').value = s.economyFuel;
+            document.getElementById('demandSurcharge').value = s.demand;
+            document.getElementById('settingsExpressFuel').value = s.expressFuel;
+            document.getElementById('settingsEconomyFuel').value = s.economyFuel;
+            document.getElementById('settingsDemand').value = s.demand;
+            document.getElementById('displayExpressFuel').textContent = s.expressFuel + '%';
+            document.getElementById('displayEconomyFuel').textContent = s.economyFuel + '%';
+            document.getElementById('displayDemand').textContent = '€' + s.demand.toFixed(2) + '/kg';
+            if (s.updatedAt) {
+                document.getElementById('settingsLastUpdated').textContent = 'Surcharges updated: ' + s.updatedAt;
+            }
+        }
+
+        // Load saved settings on page load
+        (function loadSettings() {
+            const saved = localStorage.getItem('dhlPricingSettings');
+            if (saved) {
+                try {
+                    const s = JSON.parse(saved);
+                    applySettings(s);
+                } catch (e) {}
+            }
+        })();
+
+        // Email quote function
+        function emailQuote() {
+            const email = document.getElementById('quoteEmailAddress').value.trim();
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+
+            // Get shipment details
+            const originEl = document.getElementById('originCountry');
+            const originText = originEl.options[originEl.selectedIndex].text;
+            const destEl = document.getElementById('destinationCountry');
+            const destText = destEl.options[destEl.selectedIndex].text;
+            const serviceEl = document.getElementById('serviceType');
+            const serviceText = serviceEl.options[serviceEl.selectedIndex].text;
+            const weight = document.getElementById('actualWeight').value || '0';
+            const l = document.getElementById('length').value || '0';
+            const w = document.getElementById('width').value || '0';
+            const h = document.getElementById('height').value || '0';
+            const billableWt = document.getElementById('billableWeight').textContent;
+            const totalPrice = document.getElementById('totalPrice').textContent;
+
+            // Extract breakdown text from the HTML
+            const breakdownEl = document.getElementById('priceBreakdown');
+            const rows = breakdownEl.querySelectorAll('.breakdown-row');
+            let breakdownText = '';
+            rows.forEach(row => {
+                const spans = row.querySelectorAll('span');
+                if (spans.length === 2) {
+                    breakdownText += spans[0].textContent.trim() + ': ' + spans[1].textContent.trim() + '\n';
+                }
+            });
+
+            const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+
+            const subject = `DHL Shipping Quote — ${originText} → ${destText} (${today})`;
+            const body = `DHL Express Austria — Shipping Quote\n` +
+                `Date: ${today}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `SHIPMENT DETAILS\n` +
+                `Origin: ${originText}\n` +
+                `Destination: ${destText}\n` +
+                `Service: ${serviceText}\n` +
+                `Actual Weight: ${weight} kg\n` +
+                `Dimensions: ${l} × ${w} × ${h} cm\n` +
+                `${billableWt}\n\n` +
+                `PRICE BREAKDOWN\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                breakdownText +
+                `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `This quote is valid for the current month and is subject to DHL surcharge updates.\n` +
+                `Generated by BagJump DHL Pricing Tool.`;
+
+            const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+        }
+
+        // Full country list
+        const ALL_COUNTRIES = [
+            {code:'AF',name:'Afghanistan'},{code:'AL',name:'Albania'},{code:'DZ',name:'Algeria'},
+            {code:'AS',name:'American Samoa'},{code:'AD',name:'Andorra'},{code:'AO',name:'Angola'},
+            {code:'AI',name:'Anguilla'},{code:'AG',name:'Antigua & Barbuda'},{code:'AR',name:'Argentina'},
+            {code:'AM',name:'Armenia'},{code:'AW',name:'Aruba'},{code:'AU',name:'Australia'},
+            {code:'AT',name:'Austria'},{code:'AZ',name:'Azerbaijan'},{code:'BS',name:'Bahamas'},
+            {code:'BH',name:'Bahrain'},{code:'BD',name:'Bangladesh'},{code:'BB',name:'Barbados'},
+            {code:'BY',name:'Belarus'},{code:'BE',name:'Belgium'},{code:'BZ',name:'Belize'},
+            {code:'BJ',name:'Benin'},{code:'BM',name:'Bermuda'},{code:'BT',name:'Bhutan'},
+            {code:'BO',name:'Bolivia'},{code:'XB',name:'Bonaire'},{code:'BA',name:'Bosnia & Herzegovina'},
+            {code:'BW',name:'Botswana'},{code:'BR',name:'Brazil'},{code:'BN',name:'Brunei'},
+            {code:'BG',name:'Bulgaria'},{code:'BF',name:'Burkina Faso'},{code:'BI',name:'Burundi'},
+            {code:'KH',name:'Cambodia'},{code:'CM',name:'Cameroon'},{code:'CA',name:'Canada'},
+            {code:'IC',name:'Canary Islands'},{code:'CV',name:'Cape Verde'},{code:'KY',name:'Cayman Islands'},
+            {code:'CF',name:'Central African Republic'},{code:'TD',name:'Chad'},{code:'CL',name:'Chile'},
+            {code:'CN',name:'China'},{code:'CO',name:'Colombia'},{code:'KM',name:'Comoros'},
+            {code:'CG',name:'Congo (Republic)'},{code:'CD',name:'Congo (DR)'},{code:'CK',name:'Cook Islands'},
+            {code:'CR',name:'Costa Rica'},{code:'HR',name:'Croatia'},{code:'CU',name:'Cuba'},
+            {code:'CW',name:'Curacao'},{code:'CY',name:'Cyprus'},{code:'CZ',name:'Czech Republic'},
+            {code:'DK',name:'Denmark'},{code:'DJ',name:'Djibouti'},{code:'DM',name:'Dominica'},
+            {code:'DO',name:'Dominican Republic'},{code:'EC',name:'Ecuador'},{code:'EG',name:'Egypt'},
+            {code:'SV',name:'El Salvador'},{code:'GQ',name:'Equatorial Guinea'},{code:'ER',name:'Eritrea'},
+            {code:'EE',name:'Estonia'},{code:'SZ',name:'Eswatini'},{code:'ET',name:'Ethiopia'},
+            {code:'FK',name:'Falkland Islands'},{code:'FO',name:'Faroe Islands'},{code:'FJ',name:'Fiji'},
+            {code:'FI',name:'Finland'},{code:'FR',name:'France'},{code:'GF',name:'French Guiana'},
+            {code:'GA',name:'Gabon'},{code:'GM',name:'Gambia'},{code:'GE',name:'Georgia'},
+            {code:'DE',name:'Germany'},{code:'GH',name:'Ghana'},{code:'GI',name:'Gibraltar'},
+            {code:'GR',name:'Greece'},{code:'GL',name:'Greenland'},{code:'GD',name:'Grenada'},
+            {code:'GP',name:'Guadeloupe'},{code:'GU',name:'Guam'},{code:'GT',name:'Guatemala'},
+            {code:'GG',name:'Guernsey'},{code:'GN',name:'Guinea'},{code:'GW',name:'Guinea-Bissau'},
+            {code:'GY',name:'Guyana'},{code:'HT',name:'Haiti'},{code:'HN',name:'Honduras'},
+            {code:'HK',name:'Hong Kong'},{code:'HU',name:'Hungary'},{code:'IS',name:'Iceland'},
+            {code:'IN',name:'India'},{code:'ID',name:'Indonesia'},{code:'IR',name:'Iran'},
+            {code:'IQ',name:'Iraq'},{code:'IE',name:'Ireland'},{code:'IL',name:'Israel'},
+            {code:'IT',name:'Italy'},{code:'CI',name:'Ivory Coast'},{code:'JM',name:'Jamaica'},
+            {code:'JP',name:'Japan'},{code:'JE',name:'Jersey'},{code:'JO',name:'Jordan'},
+            {code:'KZ',name:'Kazakhstan'},{code:'KE',name:'Kenya'},{code:'KI',name:'Kiribati'},
+            {code:'KV',name:'Kosovo'},{code:'KW',name:'Kuwait'},{code:'KG',name:'Kyrgyzstan'},
+            {code:'LA',name:'Laos'},{code:'LV',name:'Latvia'},{code:'LB',name:'Lebanon'},
+            {code:'LS',name:'Lesotho'},{code:'LR',name:'Liberia'},{code:'LY',name:'Libya'},
+            {code:'LI',name:'Liechtenstein'},{code:'LT',name:'Lithuania'},{code:'LU',name:'Luxembourg'},
+            {code:'MO',name:'Macau'},{code:'MG',name:'Madagascar'},{code:'MW',name:'Malawi'},
+            {code:'MY',name:'Malaysia'},{code:'MV',name:'Maldives'},{code:'ML',name:'Mali'},
+            {code:'MT',name:'Malta'},{code:'MH',name:'Marshall Islands'},{code:'MQ',name:'Martinique'},
+            {code:'MR',name:'Mauritania'},{code:'MU',name:'Mauritius'},{code:'YT',name:'Mayotte'},
+            {code:'MX',name:'Mexico'},{code:'FM',name:'Micronesia'},{code:'MD',name:'Moldova'},
+            {code:'MC',name:'Monaco'},{code:'MN',name:'Mongolia'},{code:'ME',name:'Montenegro'},
+            {code:'MS',name:'Montserrat'},{code:'MA',name:'Morocco'},{code:'MZ',name:'Mozambique'},
+            {code:'MM',name:'Myanmar'},{code:'NA',name:'Namibia'},{code:'NR',name:'Nauru'},
+            {code:'NP',name:'Nepal'},{code:'NL',name:'Netherlands'},{code:'NC',name:'New Caledonia'},
+            {code:'NZ',name:'New Zealand'},{code:'NI',name:'Nicaragua'},{code:'NE',name:'Niger'},
+            {code:'NG',name:'Nigeria'},{code:'NU',name:'Niue'},{code:'KP',name:'North Korea'},
+            {code:'MK',name:'North Macedonia'},{code:'MP',name:'Northern Mariana Islands'},
+            {code:'NO',name:'Norway'},{code:'OM',name:'Oman'},{code:'PK',name:'Pakistan'},
+            {code:'PW',name:'Palau'},{code:'PA',name:'Panama'},{code:'PG',name:'Papua New Guinea'},
+            {code:'PY',name:'Paraguay'},{code:'PE',name:'Peru'},{code:'PH',name:'Philippines'},
+            {code:'PL',name:'Poland'},{code:'PT',name:'Portugal'},{code:'PR',name:'Puerto Rico'},
+            {code:'QA',name:'Qatar'},{code:'RE',name:'Reunion'},{code:'RO',name:'Romania'},
+            {code:'RU',name:'Russia'},{code:'RW',name:'Rwanda'},{code:'XY',name:'St. Barthelemy'},
+            {code:'XE',name:'St. Eustatius'},{code:'SH',name:'St. Helena'},
+            {code:'KN',name:'St. Kitts & Nevis'},{code:'LC',name:'St. Lucia'},
+            {code:'XM',name:'St. Maarten'},{code:'VC',name:'St. Vincent'},
+            {code:'WS',name:'Samoa'},{code:'SM',name:'San Marino'},{code:'ST',name:'Sao Tome & Principe'},
+            {code:'SA',name:'Saudi Arabia'},{code:'SN',name:'Senegal'},{code:'RS',name:'Serbia'},
+            {code:'SC',name:'Seychelles'},{code:'SL',name:'Sierra Leone'},{code:'SG',name:'Singapore'},
+            {code:'SK',name:'Slovakia'},{code:'SI',name:'Slovenia'},{code:'SB',name:'Solomon Islands'},
+            {code:'SO',name:'Somalia'},{code:'ZA',name:'South Africa'},{code:'KR',name:'South Korea'},
+            {code:'SS',name:'South Sudan'},{code:'ES',name:'Spain'},{code:'LK',name:'Sri Lanka'},
+            {code:'SD',name:'Sudan'},{code:'SR',name:'Suriname'},{code:'SE',name:'Sweden'},
+            {code:'CH',name:'Switzerland'},{code:'SY',name:'Syria'},{code:'TW',name:'Taiwan'},
+            {code:'TJ',name:'Tajikistan'},{code:'TZ',name:'Tanzania'},{code:'TH',name:'Thailand'},
+            {code:'TL',name:'East Timor'},{code:'TG',name:'Togo'},{code:'TO',name:'Tonga'},
+            {code:'TT',name:'Trinidad & Tobago'},{code:'TN',name:'Tunisia'},{code:'TR',name:'Turkey'},
+            {code:'TM',name:'Turkmenistan'},{code:'TC',name:'Turks & Caicos Islands'},
+            {code:'TV',name:'Tuvalu'},{code:'UG',name:'Uganda'},{code:'UA',name:'Ukraine'},
+            {code:'AE',name:'United Arab Emirates'},{code:'GB',name:'United Kingdom'},
+            {code:'US',name:'United States'},{code:'UY',name:'Uruguay'},{code:'UZ',name:'Uzbekistan'},
+            {code:'VU',name:'Vanuatu'},{code:'VA',name:'Vatican City'},{code:'VE',name:'Venezuela'},
+            {code:'VN',name:'Vietnam'},{code:'VI',name:'Virgin Islands (US)'},
+            {code:'VG',name:'Virgin Islands (British)'},{code:'YE',name:'Yemen'},
+            {code:'ZM',name:'Zambia'},{code:'ZW',name:'Zimbabwe'},{code:'PF',name:'Tahiti (French Polynesia)'}
+        ].sort((a,b) => a.name.localeCompare(b.name));
+
+        // Searchable destination dropdown
+        (function() {
+            const input = document.getElementById('destSearchInput');
+            const hidden = document.getElementById('destinationCountry');
+            const dropdown = document.getElementById('destDropdown');
+            let highlightIndex = -1;
+            let filtered = [];
+
+            function getDestName(code) {
+                const c = ALL_COUNTRIES.find(c => c.code === code);
+                return c ? c.name : code;
+            }
+            // Expose globally for use in breakdown labels
+            window.getDestName = getDestName;
+
+            function renderDropdown(list) {
+                filtered = list;
+                highlightIndex = -1;
+                if (list.length === 0) {
+                    dropdown.innerHTML = '<div class="no-results">No countries found</div>';
+                } else {
+                    dropdown.innerHTML = list.map((c, i) =>
+                        `<div class="search-item" data-code="${c.code}" data-index="${i}">${c.name} <span class="code">(${c.code})</span></div>`
+                    ).join('');
+                }
+                dropdown.style.display = 'block';
+            }
+
+            function selectCountry(code, name) {
+                hidden.value = code;
+                input.value = `${name} (${code})`;
+                dropdown.style.display = 'none';
+            }
+
+            input.addEventListener('focus', () => {
+                const q = input.value.trim().toLowerCase();
+                const list = q ? ALL_COUNTRIES.filter(c =>
+                    c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
+                ) : ALL_COUNTRIES;
+                renderDropdown(list);
+            });
+
+            input.addEventListener('input', () => {
+                hidden.value = ''; // Clear selection when typing
+                const q = input.value.trim().toLowerCase();
+                const list = q ? ALL_COUNTRIES.filter(c =>
+                    c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
+                ) : ALL_COUNTRIES;
+                renderDropdown(list);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const items = dropdown.querySelectorAll('.search-item');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    highlightIndex = Math.min(highlightIndex + 1, items.length - 1);
+                    items.forEach((el, i) => el.classList.toggle('highlighted', i === highlightIndex));
+                    items[highlightIndex]?.scrollIntoView({block: 'nearest'});
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    highlightIndex = Math.max(highlightIndex - 1, 0);
+                    items.forEach((el, i) => el.classList.toggle('highlighted', i === highlightIndex));
+                    items[highlightIndex]?.scrollIntoView({block: 'nearest'});
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (highlightIndex >= 0 && filtered[highlightIndex]) {
+                        selectCountry(filtered[highlightIndex].code, filtered[highlightIndex].name);
+                    } else if (filtered.length === 1) {
+                        selectCountry(filtered[0].code, filtered[0].name);
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            dropdown.addEventListener('click', (e) => {
+                const item = e.target.closest('.search-item');
+                if (item) {
+                    const code = item.dataset.code;
+                    const name = ALL_COUNTRIES.find(c => c.code === code)?.name || code;
+                    selectCountry(code, name);
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#destSearchWrapper')) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        })();
+
+        // Calculate volumetric weight on load
+        calculateVolumetricWeight();
+    </script>
+</body>
+</html>
