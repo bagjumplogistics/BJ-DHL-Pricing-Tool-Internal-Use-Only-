@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DHL Express Austria Pricing Tool</title>
+    <title>BAGJUMP Shipping Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,10 +14,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f0f2f5;
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }
 
         .container {
@@ -24,31 +27,47 @@
         }
 
         header {
-            background: linear-gradient(135deg, #D40511 0%, #990000 100%);
-            color: #FFCC00;
-            padding: 30px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            color: #003952;
+            padding: 24px 28px;
+            border-radius: 10px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            border-bottom: 3px solid #CB0F13;
+        }
+
+        header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header .header-logo img {
+            height: 44px;
+            width: auto;
+        }
+
+        header .header-title {
+            border-left: 2px solid rgba(0, 57, 82, 0.2);
+            padding-left: 20px;
         }
 
         header h1 {
-            font-size: 2em;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        header .dhl-logo {
-            font-weight: bold;
-            letter-spacing: 2px;
-            font-size: 1.1em;
+            font-family: 'Roboto Condensed', Arial Narrow, sans-serif;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
         }
 
         header p {
-            font-size: 0.95em;
-            opacity: 0.95;
+            font-size: 0.85em;
+            opacity: 0.5;
+            font-weight: 400;
         }
 
         .content-wrapper {
@@ -72,11 +91,13 @@
         }
 
         .card h2 {
-            color: #D40511;
+            color: #003952;
+            font-family: 'Roboto Condensed', Arial Narrow, sans-serif;
             font-size: 1.3em;
+            font-weight: 700;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #FFCC00;
+            border-bottom: 3px solid #CB0F13;
         }
 
         .form-group {
@@ -102,8 +123,8 @@
 
         select:focus, input[type="number"]:focus, input[type="text"]:focus {
             outline: none;
-            border-color: #D40511;
-            box-shadow: 0 0 0 3px rgba(212, 5, 17, 0.1);
+            border-color: #003952;
+            box-shadow: 0 0 0 3px rgba(0, 57, 82, 0.12);
         }
 
         .preset-buttons {
@@ -115,9 +136,9 @@
         .preset-btn {
             flex: 1;
             padding: 8px 12px;
-            border: 2px solid #D40511;
+            border: 2px solid #CB0F13;
             background: white;
-            color: #D40511;
+            color: #CB0F13;
             border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
@@ -126,12 +147,12 @@
         }
 
         .preset-btn:hover {
-            background: #D40511;
+            background: #CB0F13;
             color: white;
         }
 
         .preset-btn.active {
-            background: #D40511;
+            background: #CB0F13;
             color: white;
         }
 
@@ -155,9 +176,9 @@
         }
 
         .toggle-btn.active {
-            background: #D40511;
+            background: #003952;
             color: white;
-            border-color: #D40511;
+            border-color: #003952;
         }
 
         .weight-calculator {
@@ -165,7 +186,7 @@
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 18px;
-            border-left: 4px solid #FFCC00;
+            border-left: 4px solid #003952;
         }
 
         .weight-calculator label {
@@ -199,7 +220,7 @@
             padding: 15px;
             border-radius: 5px;
             margin-top: 18px;
-            border-left: 4px solid #FFCC00;
+            border-left: 4px solid #CB0F13;
         }
 
         .premium-option {
@@ -228,7 +249,7 @@
         }
 
         .price-display {
-            background: linear-gradient(135deg, #FFCC00 0%, #FFB700 100%);
+            background: linear-gradient(135deg, #003952 0%, #00516e 100%);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -237,15 +258,15 @@
 
         .price-display .label {
             font-size: 0.9em;
-            color: #333;
-            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
             margin-bottom: 5px;
         }
 
         .price-display .amount {
             font-size: 2.5em;
-            font-weight: bold;
-            color: #D40511;
+            font-weight: 900;
+            color: white;
         }
 
         .price-breakdown {
@@ -268,9 +289,9 @@
             border-bottom: none;
             font-weight: 700;
             padding-top: 10px;
-            border-top: 2px solid #D40511;
+            border-top: 2px solid #CB0F13;
             font-size: 1.1em;
-            color: #D40511;
+            color: #CB0F13;
         }
 
         .search-select {
@@ -285,9 +306,9 @@
             box-sizing: border-box;
         }
         .search-select input[type="text"]:focus {
-            border-color: #D40511;
+            border-color: #003952;
             outline: none;
-            box-shadow: 0 0 0 2px rgba(212,5,17,0.15);
+            box-shadow: 0 0 0 2px rgba(0,57,82,0.15);
         }
         .search-dropdown {
             display: none;
@@ -312,7 +333,7 @@
         }
         .search-dropdown .search-item:hover,
         .search-dropdown .search-item.highlighted {
-            background: #FFF3CD;
+            background: #e6f0f5;
         }
         .search-dropdown .search-item .code {
             color: #888;
@@ -330,7 +351,7 @@
             border-radius: 5px;
             margin-bottom: 15px;
             font-size: 0.9em;
-            border-left: 4px solid #D40511;
+            border-left: 4px solid #003952;
         }
 
         .info-section .info-title {
@@ -348,12 +369,14 @@
         .calculate-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #D40511 0%, #990000 100%);
-            color: #FFCC00;
+            background: #CB0F13;
+            color: white;
             border: none;
             border-radius: 5px;
+            font-family: 'Roboto Condensed', Arial Narrow, sans-serif;
             font-weight: 700;
-            font-size: 1em;
+            font-size: 1.05em;
+            letter-spacing: 0.5px;
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 20px;
@@ -361,7 +384,8 @@
 
         .calculate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(212, 5, 17, 0.3);
+            box-shadow: 0 4px 12px rgba(203, 15, 19, 0.35);
+            background: #a80d10;
         }
 
         .calculate-btn:active {
@@ -389,7 +413,7 @@
             font-size: 0.85em;
             color: #666;
             margin-top: 15px;
-            border-left: 4px solid #FFCC00;
+            border-left: 4px solid #CB0F13;
         }
 
         .note strong {
@@ -431,18 +455,37 @@
 </head>
 <body>
     <div class="container">
-        <header style="position:relative;">
-            <h1><span class="dhl-logo">DHL</span> Express Austria</h1>
-            <p>Professional Pricing Tool for Internal Use</p>
-            <button onclick="document.getElementById('settingsModal').style.display='flex'" style="position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.15); border:2px solid #FFCC00; color:#FFCC00; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:1.4em; display:flex; align-items:center; justify-content:center;" title="Monthly Settings">&#9881;</button>
-            <div id="settingsLastUpdated" style="position:absolute; bottom:8px; right:20px; font-size:0.75em; color:rgba(255,204,0,0.7);"></div>
+        <header>
+            <div class="header-left">
+                <div class="header-logo">
+                    <img src="data:image/png;base64,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" alt="BAGJUMP Airbag Systems">
+                </div>
+                <div class="header-title">
+                    <h1>Shipping Calculator</h1>
+                    <p>Internal Pricing Tool</p>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div id="settingsLastUpdated" style="font-size:0.72em; color:rgba(0,57,82,0.4);"></div>
+                <button onclick="document.getElementById('settingsModal').style.display='flex'" style="background:rgba(0,57,82,0.05); border:2px solid rgba(0,57,82,0.2); color:#003952; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.2em; display:flex; align-items:center; justify-content:center; transition:all 0.3s;" title="Monthly Settings" onmouseover="this.style.background='rgba(0,57,82,0.1)'" onmouseout="this.style.background='rgba(0,57,82,0.05)'">&#9881;</button>
+            </div>
         </header>
+
+        <!-- Mode Selector -->
+        <div style="display:flex; gap:0; margin-bottom:24px; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <button id="modeDHL" onclick="switchMode('dhl')" style="flex:1; padding:16px; background:#CB0F13; color:white; border:none; font-family:'Roboto Condensed',Arial Narrow,sans-serif; font-weight:700; font-size:1.05em; cursor:pointer; transition:all 0.3s; letter-spacing:0.3px;">
+                Express &amp; Economy<br><span style="font-size:0.75em; font-weight:400; opacity:0.85;">Packages up to 100 kg</span>
+            </button>
+            <button id="modeAirCargo" onclick="switchMode('aircargo')" style="flex:1; padding:16px; background:#f0f0f0; color:#666; border:none; font-family:'Roboto Condensed',Arial Narrow,sans-serif; font-weight:700; font-size:1.05em; cursor:pointer; transition:all 0.3s; letter-spacing:0.3px;">
+                CP AIR Cargo<br><span style="font-size:0.75em; font-weight:400;">Heavy freight 100 kg+</span>
+            </button>
+        </div>
 
         <!-- Settings Modal -->
         <div id="settingsModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
             <div style="background:white; border-radius:10px; padding:30px; width:500px; max-width:90vw; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2 style="color:#D40511; font-size:1.3em; margin:0;">Monthly Settings</h2>
+                    <h2 style="color:#CB0F13; font-size:1.3em; margin:0;">Monthly Settings</h2>
                     <button onclick="document.getElementById('settingsModal').style.display='none'" style="background:none; border:none; font-size:1.5em; cursor:pointer; color:#666;">&times;</button>
                 </div>
                 <p style="font-size:0.85em; color:#666; margin-bottom:20px;">Update these values at the start of each month. Settings are saved automatically in your browser.</p>
@@ -450,14 +493,14 @@
                 <div style="display:grid; gap:16px;">
                     <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
                         <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">Express Fuel Surcharge — Jet Fuel (%)</label>
-                        <input type="number" id="settingsExpressFuel" step="0.01" min="0" value="28.75" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
-                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Based on USGC kerosene jet fuel index. Check DHL monthly update.</p>
+                        <input type="number" id="settingsExpressFuel" step="0.01" min="0" value="30.50" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
+                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Based on USGC kerosene jet fuel index. Update monthly.</p>
                     </div>
 
                     <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
                         <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">Economy Fuel Surcharge — Diesel (%)</label>
-                        <input type="number" id="settingsEconomyFuel" step="0.01" min="0" value="17.44" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
-                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Based on national diesel price index. Check DHL monthly update.</p>
+                        <input type="number" id="settingsEconomyFuel" step="0.01" min="0" value="20.50" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
+                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Based on national diesel price index. Update monthly.</p>
                     </div>
 
                     <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
@@ -467,10 +510,12 @@
                     </div>
                 </div>
 
-                <button onclick="saveSettings()" style="width:100%; margin-top:20px; padding:14px; background:#D40511; color:white; border:none; border-radius:6px; font-size:1em; font-weight:700; cursor:pointer;">Save Settings</button>
+                <button onclick="saveSettings()" style="width:100%; margin-top:20px; padding:14px; background:#CB0F13; color:white; border:none; border-radius:6px; font-size:1em; font-weight:700; cursor:pointer;">Save Settings</button>
             </div>
         </div>
 
+        <!-- ==================== DHL MODE ==================== -->
+        <div id="dhlSection">
         <div class="content-wrapper">
             <!-- Input Card -->
             <div class="card">
@@ -503,46 +548,32 @@
                     </div>
                 </div>
 
-                <!-- Weight Input and Volumetric Calculator -->
+                <!-- Multi-Box Weight Entry -->
                 <div class="form-group">
-                    <label>Weight & Dimensions</label>
-                    <div class="weight-calculator">
-                        <div style="margin-bottom: 12px;">
-                            <label style="margin-bottom: 8px;">Actual Weight (kg)</label>
-                            <input type="number" id="actualWeight" placeholder="0.0" step="0.01" min="0">
-                        </div>
-                        <div>
-                            <label style="margin-bottom: 8px;">Calculate Volumetric Weight (L × W × H ÷ 5000)</label>
-                            <div class="weight-row">
-                                <div>
-                                    <label style="font-size: 0.85em; margin-bottom: 4px;">Length (cm)</label>
-                                    <input type="number" id="length" placeholder="Length" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.85em; margin-bottom: 4px;">Width (cm)</label>
-                                    <input type="number" id="width" placeholder="Width" step="0.1" min="0">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.85em; margin-bottom: 4px;">Height (cm)</label>
-                                    <input type="number" id="height" placeholder="Height" step="0.1" min="0">
-                                </div>
+                    <label>Boxes</label>
+                    <div class="weight-calculator" style="padding-bottom:8px;">
+                        <p style="font-size:0.82em; color:#666; margin-bottom:10px;">Enter weight per box — dimensions are auto-assigned from our standard box sizes.</p>
+                        <div id="boxContainer"></div>
+                        <button onclick="addBox()" style="width:100%; padding:8px; background:#f0f0f0; border:2px dashed #ccc; border-radius:5px; cursor:pointer; font-weight:600; color:#666; font-size:0.9em; margin-top:4px;">+ Add Box</button>
+                        <div id="boxTotals" style="display:none; background:#e8f5e9; border-radius:5px; padding:10px 12px; margin-top:10px; font-size:0.88em;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>Total Actual Weight:</span>
+                                <strong id="totalActualWeight">0.00 kg</strong>
                             </div>
-                            <div class="volumetric-result">
-                                Volumetric Weight: <strong id="volumetricWeight">0.00</strong> kg
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>Total Volumetric Weight:</span>
+                                <strong id="totalVolumetricWeight">0.00 kg</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; color:#CB0F13; font-weight:700;">
+                                <span>Billable Weight:</span>
+                                <strong id="totalBillableWeight">0.00 kg</strong>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Customs Status -->
-                <div class="form-group">
-                    <label>Destination Type (applies for shipments ≤ 2 kg)</label>
-                    <div class="toggle-group">
-                        <button class="toggle-btn" data-customs="nicht">Within EU</button>
-                        <button class="toggle-btn active" data-customs="zoll">Outside EU</button>
-                    </div>
-                    <input type="hidden" id="customsStatus" value="zoll">
-                </div>
+                <!-- Customs status auto-detected from destination -->
+                <input type="hidden" id="customsStatus" value="zoll">
 
                 <!-- Service Type -->
                 <div class="form-group">
@@ -555,48 +586,18 @@
                     <p style="font-size: 0.85em; color: #666; margin-top: 8px;">Tariff type (Export/Import/Third Country/Domestic) is auto-determined based on origin &amp; destination</p>
                 </div>
 
-                <!-- Premium Options -->
-                <div class="form-group">
-                    <label>Premium Delivery Options</label>
-                    <div class="premiums-section">
-                        <div class="premium-option">
-                            <input type="radio" id="premium-none" name="premium" value="none" checked>
-                            <label for="premium-none">No Premium (+€0.00)</label>
-                        </div>
-                        <div class="premium-option">
-                            <input type="radio" id="premium-9" name="premium" value="900">
-                            <label for="premium-9">Premium 9:00 (+€35.00)</label>
-                        </div>
-                        <div class="premium-option">
-                            <input type="radio" id="premium-1030" name="premium" value="1030">
-                            <label for="premium-1030">Premium 10:30 (+€10.00)</label>
-                        </div>
-                        <div class="premium-option">
-                            <input type="radio" id="premium-12" name="premium" value="1200">
-                            <label for="premium-12">Premium 12:00 (+€5.00)</label>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Surcharges -->
                 <div class="form-group">
                     <label>Surcharges</label>
                     <div class="weight-calculator">
-                        <input type="hidden" id="fuelSurcharge" value="28.75">
-                        <input type="hidden" id="economyFuelSurcharge" value="17.44">
+                        <input type="hidden" id="fuelSurcharge" value="30.50">
+                        <input type="hidden" id="economyFuelSurcharge" value="20.50">
                         <input type="hidden" id="demandSurcharge" value="0">
                         <div id="surchargeDisplay" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
-                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Express Fuel: <strong id="displayExpressFuel">28.75%</strong></span>
-                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Economy Fuel: <strong id="displayEconomyFuel">17.44%</strong></span>
+                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Express Fuel: <strong id="displayExpressFuel">30.50%</strong></span>
+                            <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Economy Fuel: <strong id="displayEconomyFuel">20.50%</strong></span>
                             <span style="background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:0.85em; color:#333;">Demand: <strong id="displayDemand">€0.00/kg</strong></span>
-                            <button onclick="document.getElementById('settingsModal').style.display='flex'" style="background:none; border:1px solid #D40511; color:#D40511; padding:4px 12px; border-radius:20px; font-size:0.8em; cursor:pointer; font-weight:600;">Update &#9881;</button>
-                        </div>
-                        <div style="background:#FFF3CD; border:1px solid #FFCC00; border-radius:6px; padding:10px 12px; margin-top:4px;">
-                            <label style="display:flex; align-items:center; gap:10px; font-weight:500; cursor:pointer; font-size:0.9em; color:#333;">
-                                <input type="checkbox" id="nonStackableCheck" style="width:18px; height:18px; cursor:pointer; accent-color:#D40511;">
-                                Non-Stackable Pallet <span style="font-weight:700; color:#D40511;">(+50%)</span>
-                            </label>
-                            <p style="font-size:0.78em; color:#666; margin:6px 0 0 28px; line-height:1.4;">Tick this if the pallet cannot be stacked on top of (e.g. fragile, irregular shape, top-heavy). Applies to shipments over 25 kg.</p>
+                            <button onclick="document.getElementById('settingsModal').style.display='flex'" style="background:none; border:1px solid #CB0F13; color:#CB0F13; padding:4px 12px; border-radius:20px; font-size:0.8em; cursor:pointer; font-weight:600;">Update &#9881;</button>
                         </div>
                         <div style="background:#e8f4e8; border:1px solid #4CAF50; border-radius:6px; padding:10px 12px; margin-top:10px;">
                             <div style="display:flex; align-items:center; gap:10px; font-weight:500; font-size:0.9em; color:#333;">
@@ -625,7 +626,7 @@
                 <div id="emailQuoteSection" style="display:none; margin-top:12px;">
                     <div style="display:flex; gap:10px; align-items:center;">
                         <input type="email" id="quoteEmailAddress" placeholder="Enter email address" style="flex:1; padding:10px 12px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
-                        <button onclick="emailQuote()" style="background:#D40511; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:0.95em;">Email Quote</button>
+                        <button onclick="emailQuote()" style="background:#CB0F13; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:0.95em;">Email Quote</button>
                     </div>
                 </div>
 
@@ -640,22 +641,96 @@
                     <div class="info-title">Shipment Summary</div>
                     <p id="infoText"></p>
                 </div>
+            </div>
+        </div>
+        </div><!-- end dhlSection -->
 
-                <div class="note" style="line-height:1.7;">
-                    <strong>Notes:</strong>
+        <!-- ==================== AIR CARGO MODE ==================== -->
+        <div id="airCargoSection" style="display:none;">
+        <div class="content-wrapper">
+            <!-- Air Cargo Input Card -->
+            <div class="card">
+                <h2>CP AIR Cargo — Heavy Freight</h2>
+
+                <div class="error-message" id="airErrorMessage"></div>
+
+                <!-- Origin -->
+                <div class="form-group">
+                    <label>Origin</label>
+                    <select id="airOrigin" style="width:100%; padding:10px 12px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
+                        <option value="AT">Hall in Tirol, Austria</option>
+                        <option value="BG">Sofia, Bulgaria</option>
+                    </select>
+                </div>
+
+                <!-- Destination Region -->
+                <div class="form-group">
+                    <label>Destination Region</label>
+                    <div id="airDestTabs" style="display:flex; gap:0; border-radius:6px; overflow:hidden; border:2px solid #ddd;">
+                        <button type="button" onclick="selectAirDest('usa')" id="airDestTab_usa" style="flex:1; padding:10px 12px; border:none; cursor:pointer; font-size:0.92em; font-weight:600; background:#CB0F13; color:white; transition: all 0.2s;">USA &amp; Canada</button>
+                        <button type="button" onclick="selectAirDest('row')" id="airDestTab_row" style="flex:1; padding:10px 12px; border:none; border-left:1px solid #ddd; cursor:pointer; font-size:0.92em; font-weight:600; background:#f5f5f5; color:#555; transition: all 0.2s;">Rest of World</button>
+                    </div>
+                    <input type="hidden" id="airDestRegion" value="usa">
+                </div>
+
+                <!-- Multi-Pallet Entry -->
+                <div class="form-group">
+                    <label>Pallets / Pieces</label>
+                    <div class="weight-calculator" style="padding-bottom:8px;">
+                        <p style="font-size:0.82em; color:#666; margin-bottom:10px;">Add each pallet with weight and dimensions. Volumetric weight is calculated automatically (L×W×H÷6000). Minimum total: 100 kg.</p>
+                        <div id="palletContainer"></div>
+                        <button onclick="addPallet()" style="width:100%; padding:8px; background:#f0f0f0; border:2px dashed #ccc; border-radius:5px; cursor:pointer; font-weight:600; color:#666; font-size:0.9em; margin-top:4px;">+ Add Pallet</button>
+                        <div id="palletTotals" style="background:#e8f5e9; border-radius:5px; padding:10px 12px; margin-top:10px; font-size:0.88em;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>Total Actual Weight:</span>
+                                <strong id="airTotalActual">0 kg</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>Total Volumetric Weight:</span>
+                                <strong id="airTotalVol">0 kg</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; color:#CB0F13; font-weight:700;">
+                                <span>Chargeable Weight:</span>
+                                <strong id="airChargeableWeight">0 kg</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateAirCargo()">Calculate Air Cargo Price</button>
+            </div>
+
+            <!-- Air Cargo Results Card -->
+            <div class="card results-card">
+                <h2>Air Cargo Quote</h2>
+
+                <div class="price-display">
+                    <div class="label">Total Freight Cost</div>
+                    <div class="amount" id="airTotalPrice">€0.00</div>
+                </div>
+
+                <div class="price-breakdown" id="airPriceBreakdown" style="display:none;"></div>
+
+                <div id="airEmailSection" style="display:none; margin-top:12px;">
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="email" id="airQuoteEmail" placeholder="Enter email address" style="flex:1; padding:10px 12px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
+                        <button onclick="emailAirQuote()" style="background:#CB0F13; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:0.95em;">Email Quote</button>
+                    </div>
+                </div>
+
+                <div class="note" style="line-height:1.7; margin-top:15px;">
+                    <strong>CP AIR Cargo Notes:</strong>
                     <ol style="margin:8px 0 0 18px; padding:0; font-size:0.92em;">
-                        <li>All prices in EUR. Base rates valid as of 01 January 2026.</li>
-                        <li>VAT (20%) is automatically applied for intra-EU shipments (both origin &amp; destination within EU).</li>
-                        <li>Fuel surcharges updated monthly — Express (jet fuel): 28.75%, Economy (diesel): 17.44% (Feb 2026).</li>
-                        <li>Non-Conveyable Piece (€20) applies when actual weight &gt; 25 kg or longest side &gt; 120 cm.</li>
-                        <li>DHL rounds Express weight to nearest 0.5 kg, Economy to nearest 1 kg.</li>
-                        <li>Premium 9:00 / 10:30 / 12:00 apply to Express services only.</li>
-                        <li>Neutral Delivery (€5) is automatically included for all Sofia shipments.</li>
-                        <li>Demand surcharge suspended since 17 Feb 2026.</li>
+                        <li>Chargeable weight = higher of total actual vs total volumetric (L×W×H÷6000 per piece).</li>
+                        <li>Minimum chargeable weight: 100 kg.</li>
+                        <li>Actual costs may vary based on carrier availability and fuel surcharges.</li>
+                        <li>Quotes valid for the current month only.</li>
                     </ol>
                 </div>
             </div>
         </div>
+        </div><!-- end airCargoSection -->
+
     </div>
 
     <script>
@@ -1052,13 +1127,125 @@
             'PL','PT','RO','SK','SI','ES','SE'
         ]);
 
-        // Premium surcharges
-        const PREMIUM_SURCHARGES = {
-            'none': 0.00,
-            '900': 35.00,
-            '1030': 10.00,
-            '1200': 5.00
-        };
+        // Box type definitions — maxWeight based on volumetric capacity (L×W×H÷6000)
+        // so the auto-selected box is always physically large enough to fit the item
+        const BOX_TYPES = [
+            { id: 1, label: 'Box #1', dims: [40, 30, 30], maxWeight: 6 },    // 36L → vol 6.0 kg
+            { id: 2, label: 'Box #2', dims: [60, 40, 20], maxWeight: 8 },    // 48L → vol 8.0 kg
+            { id: 3, label: 'Box #3', dims: [60, 40, 30], maxWeight: 12 },   // 72L → vol 12.0 kg
+            { id: 4, label: 'Box #4', dims: [60, 40, 40], maxWeight: 16 },   // 96L → vol 16.0 kg
+            { id: 5, label: 'Box #5', dims: [60, 60, 40], maxWeight: 24 },   // 144L → vol 24.0 kg
+            { id: 6, label: 'Box #6', dims: [80, 60, 55], maxWeight: 44 }    // 264L → vol 44.0 kg
+        ];
+
+        function findOptimalBox(weight) {
+            // Auto-select the smallest box whose volume can realistically fit the item
+            for (const box of BOX_TYPES) {
+                if (weight <= box.maxWeight) return box;
+            }
+            // If weight exceeds all boxes, return the largest
+            return BOX_TYPES[BOX_TYPES.length - 1];
+        }
+
+        // Multi-box state
+        let boxes = [{ weight: 0, boxType: null }];
+
+        function addBox() {
+            boxes.push({ weight: 0, boxType: null });
+            renderBoxes();
+        }
+
+        function removeBox(index) {
+            if (boxes.length <= 1) return;
+            boxes.splice(index, 1);
+            renderBoxes();
+        }
+
+        function updateBoxWeight(index, weight) {
+            boxes[index].weight = weight;
+            if (weight > 0) {
+                boxes[index].boxType = findOptimalBox(weight);
+            } else {
+                boxes[index].boxType = null;
+            }
+            renderBoxInfo(index);
+        }
+
+        function overrideBoxType(index, boxId) {
+            const box = BOX_TYPES.find(b => b.id === boxId);
+            if (box && boxes[index].weight <= box.maxWeight) {
+                boxes[index].boxType = box;
+                renderBoxInfo(index);
+            }
+        }
+
+        function renderBoxes() {
+            const container = document.getElementById('boxContainer');
+            container.innerHTML = '';
+            boxes.forEach((box, i) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'background:#fff; border:1px solid #ddd; border-radius:6px; padding:12px; margin-bottom:10px; position:relative;';
+                div.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-weight:700; color:#CB0F13; font-size:0.9em;">Box ${i + 1}</span>
+                        ${boxes.length > 1 ? `<button onclick="removeBox(${i})" style="margin-left:auto; background:none; border:1px solid #ccc; color:#999; border-radius:4px; padding:2px 8px; cursor:pointer; font-size:0.8em;" title="Remove box">&times;</button>` : ''}
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:flex-end;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.82em; margin-bottom:4px; display:block;">Weight (kg)</label>
+                            <input type="number" id="boxWeight_${i}" value="${box.weight || ''}" placeholder="0.0" step="0.01" min="0"
+                                   oninput="updateBoxWeight(${i}, parseFloat(this.value) || 0)"
+                                   style="width:100%; padding:8px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
+                        </div>
+                        <div id="boxInfo_${i}" style="flex:2; font-size:0.85em; color:#555; padding:8px 0;"></div>
+                    </div>
+                    <div id="boxOverride_${i}" style="display:none; margin-top:6px;"></div>
+                `;
+                container.appendChild(div);
+                // Re-render info if box already has data
+                if (box.boxType) renderBoxInfo(i);
+            });
+        }
+
+        function renderBoxInfo(index) {
+            const box = boxes[index];
+            const infoEl = document.getElementById('boxInfo_' + index);
+            const overrideEl = document.getElementById('boxOverride_' + index);
+            if (!infoEl) return;
+
+            if (!box.boxType || box.weight <= 0) {
+                infoEl.innerHTML = '<span style="color:#999;">Enter weight to auto-select box</span>';
+                if (overrideEl) overrideEl.style.display = 'none';
+                return;
+            }
+
+            const bt = box.boxType;
+            const vol = (bt.dims[0] * bt.dims[1] * bt.dims[2]) / 5000;
+            const overMax = box.weight > BOX_TYPES[BOX_TYPES.length - 1].maxWeight;
+
+            infoEl.innerHTML = `
+                <span style="font-weight:600; color:#333;">${bt.label}</span>
+                <span style="color:#888;">${bt.dims[0]}×${bt.dims[1]}×${bt.dims[2]} cm</span>
+                <span style="color:#888;">Vol: ${vol.toFixed(2)} kg</span>
+                ${overMax ? '<span style="color:#c33; font-weight:600;">⚠ Over max</span>' : ''}
+            `;
+
+            // Show override option if there are alternative boxes with sufficient capacity
+            const alternatives = BOX_TYPES.filter(b => b.maxWeight >= box.weight && b.id !== bt.id);
+            if (alternatives.length > 0 && overrideEl) {
+                overrideEl.style.display = 'block';
+                overrideEl.innerHTML = `
+                    <select onchange="overrideBoxType(${index}, parseInt(this.value))" style="padding:4px 8px; border:1px solid #ddd; border-radius:4px; font-size:0.82em; color:#666;">
+                        <option value="${bt.id}">${bt.label} — ${bt.dims.join('×')} (auto)</option>
+                        ${alternatives.map(a => `<option value="${a.id}">${a.label} — ${a.dims.join('×')} (max ${a.maxWeight} kg)</option>`).join('')}
+                    </select>
+                `;
+            } else if (overrideEl) {
+                overrideEl.style.display = 'none';
+            }
+        }
+
+        // Premium surcharges removed — no longer offered
 
         // ==================== EVENT LISTENERS ====================
         document.querySelectorAll('.preset-btn').forEach(btn => {
@@ -1069,17 +1256,10 @@
             });
         });
 
-        ['length', 'width', 'height'].forEach(id => {
-            document.getElementById(id).addEventListener('change', calculateVolumetricWeight);
-        });
+        // Initialize box UI
+        renderBoxes();
 
-        document.querySelectorAll('[data-customs]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('[data-customs]').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                document.getElementById('customsStatus').value = e.target.dataset.customs;
-            });
-        });
+        // Customs status is now auto-detected from destination
 
         document.querySelectorAll('[data-service]').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1090,13 +1270,6 @@
         });
 
         // ==================== HELPER FUNCTIONS ====================
-        function calculateVolumetricWeight() {
-            const l = parseFloat(document.getElementById('length').value) || 0;
-            const w = parseFloat(document.getElementById('width').value) || 0;
-            const h = parseFloat(document.getElementById('height').value) || 0;
-            const volumetric = (l * w * h) / 5000;
-            document.getElementById('volumetricWeight').textContent = volumetric.toFixed(2);
-        }
 
         function showError(msg) {
             const el = document.getElementById('errorMessage');
@@ -1263,16 +1436,44 @@
             const origin = document.getElementById('originCountry').value.toUpperCase();
             const destination = document.getElementById('destinationCountry').value.toUpperCase();
             const service = document.getElementById('serviceType').value;
-            const actualWeight = parseFloat(document.getElementById('actualWeight').value) || 0;
-            const volumetric = parseFloat(document.getElementById('volumetricWeight').textContent) || 0;
-            // DHL rounds chargeable weight: Express to nearest 0.5 kg, Economy to nearest 1 kg
-            const rawBillable = Math.max(actualWeight, volumetric);
+            // Auto-detect customs status from destination
+            const customsStatus = EU_COUNTRIES.has(destination) ? 'nicht' : 'zoll';
+            const premiumSurcharge = 0; // Premium options removed
+
+            // === Multi-box: gather all boxes with weight > 0 ===
+            const activeBoxes = boxes.filter(b => b.weight > 0 && b.boxType);
+            if (activeBoxes.length === 0) {
+                showError('Please enter weight for at least one box');
+                return;
+            }
+
+            // Per-box calculations
+            const boxDetails = activeBoxes.map(b => {
+                const bt = b.boxType;
+                const dims = [...bt.dims].sort((a, b) => b - a);
+                const vol = (bt.dims[0] * bt.dims[1] * bt.dims[2]) / 5000;
+                return {
+                    weight: b.weight,
+                    boxType: bt,
+                    dims: dims,
+                    volumetric: vol,
+                    isNCP: b.weight > 25 || dims[0] > 120
+                };
+            });
+
+            // Shipment totals
+            const totalActualWeight = boxDetails.reduce((s, b) => s + b.weight, 0);
+            const totalVolumetric = boxDetails.reduce((s, b) => s + b.volumetric, 0);
+            const rawBillable = Math.max(totalActualWeight, totalVolumetric);
             const billableWeight = service === 'economy'
                 ? Math.ceil(rawBillable)
                 : Math.ceil(rawBillable * 2) / 2;
-            const customsStatus = document.getElementById('customsStatus').value;
-            const premiumValue = document.querySelector('input[name="premium"]:checked').value;
-            const premiumSurcharge = PREMIUM_SURCHARGES[premiumValue];
+
+            // Update totals display
+            document.getElementById('boxTotals').style.display = 'block';
+            document.getElementById('totalActualWeight').textContent = totalActualWeight.toFixed(2) + ' kg';
+            document.getElementById('totalVolumetricWeight').textContent = totalVolumetric.toFixed(2) + ' kg';
+            document.getElementById('totalBillableWeight').textContent = billableWeight.toFixed(2) + ' kg';
 
             // Validation
             if (!destination) {
@@ -1294,44 +1495,40 @@
             const expressFuelPct = parseFloat(document.getElementById('fuelSurcharge').value) || 0;
             const economyFuelPct = parseFloat(document.getElementById('economyFuelSurcharge').value) || 0;
             const demandPerKg = parseFloat(document.getElementById('demandSurcharge').value) || 0;
-            const dimL = parseFloat(document.getElementById('length').value) || 0;
-            const dimW = parseFloat(document.getElementById('width').value) || 0;
-            const dimH = parseFloat(document.getElementById('height').value) || 0;
-            const dims = [dimL, dimW, dimH].sort((a, b) => b - a);
-            const isOversize = dims[0] > 100 || dims[1] > 80;
-            const isOverweight = actualWeight > 70;
-            const isNonConveyable = actualWeight > 25 || dims[0] > 120;
-            const isNonStackable = document.getElementById('nonStackableCheck').checked;
+
+            // Per-shipment surcharge flags (check across ALL boxes)
+            const ncpCount = boxDetails.filter(b => b.isNCP).length;
+            const totalNCP = ncpCount * 20.00;
+            const isOversize = boxDetails.some(b => b.dims[0] > 100 || b.dims[1] > 80);
+            const isOverweight = totalActualWeight > 70;
+            const boxCount = activeBoxes.length;
             const fmt = (v) => '€' + v.toFixed(2);
 
             // Helper: calculate surcharges for a given base price and service type
             function calcSurcharges(base, svc, premium = 0) {
                 const fuelPct = svc === 'economy' ? economyFuelPct : expressFuelPct;
-                const ncp = isNonConveyable ? 20.00 : 0;
-                const fuelBase = base + premium + ncp; // DHL applies fuel on base + premium + NCP
+                const fuelBase = base + premium + totalNCP; // DHL applies fuel on base + premium + NCP
                 const fuel = fuelBase * (fuelPct / 100);
                 const demand = demandPerKg * billableWeight;
                 const oversize = isOversize ? base * 0.50 : 0;
-                const nonStack = isNonStackable ? base * 0.50 : 0;
                 const overwt = isOverweight ? (svc === 'economy' ? 55.00 : 35.00) : 0;
-                return { fuel, fuelPct, ncp, demand, oversize, nonStack, overwt, total: fuel + ncp + demand + oversize + nonStack + overwt };
+                return { fuel, fuelPct, ncp: totalNCP, ncpCount, demand, oversize, overwt, total: fuel + totalNCP + demand + oversize + overwt };
             }
 
             // Helper: build surcharge rows for breakdown
             function surchargeRows(sc, svc) {
                 let rows = [];
                 if (sc.ncp > 0) {
-                    const ncpReason = actualWeight > 25 ? `${actualWeight.toFixed(1)} kg > 25 kg` : `${dims[0]} cm > 120 cm`;
-                    rows.push({label: `Non-Conveyable Piece (${ncpReason})`, value: sc.ncp});
+                    rows.push({label: `Non-Conveyable (${sc.ncpCount} piece${sc.ncpCount > 1 ? 's' : ''} × €20)`, value: sc.ncp});
                 }
                 if (sc.fuel > 0) rows.push({label: `Fuel (${sc.fuelPct}%)`, value: sc.fuel});
                 if (sc.demand > 0) rows.push({label: `Demand (€${demandPerKg.toFixed(2)}/kg)`, value: sc.demand});
                 if (sc.oversize > 0) {
-                    const reason = dims[0] > 100 ? dims[0] + 'cm longest' : dims[1] + 'cm 2nd side';
+                    const oversizeBox = boxDetails.find(b => b.dims[0] > 100 || b.dims[1] > 80);
+                    const reason = oversizeBox && oversizeBox.dims[0] > 100 ? oversizeBox.dims[0] + 'cm longest' : (oversizeBox ? oversizeBox.dims[1] + 'cm 2nd side' : '');
                     rows.push({label: `Oversize (${reason})`, value: sc.oversize});
                 }
-                if (sc.nonStack > 0) rows.push({label: 'Non-Stackable (+50%)', value: sc.nonStack});
-                if (sc.overwt > 0) rows.push({label: `Overweight (${actualWeight.toFixed(0)} kg)`, value: sc.overwt});
+                if (sc.overwt > 0) rows.push({label: `Overweight (${totalActualWeight.toFixed(0)} kg)`, value: sc.overwt});
                 return rows;
             }
 
@@ -1358,17 +1555,16 @@
                     : ECONOMY_EXPORT_RATES;
                 const leg2Rt = service === 'express' ? 'export' : 'economy_export';
                 const leg2Base = getPriceForWeight(billableWeight, leg2Zone, leg2Rates, service, leg2Rt);
-                const leg2Premium = premiumSurcharge;
-                const leg2Sc = calcSurcharges(leg2Base, service, leg2Premium);
-                const leg2Total = leg2Base + leg2Premium + leg2Sc.total;
+                const leg2Sc = calcSurcharges(leg2Base, service, 0);
+                const leg2Total = leg2Base + leg2Sc.total;
 
                 const grandTotal = leg1Total + leg2Total;
 
                 // --- Build breakdown ---
                 let html = '';
                 // Leg 1 header
-                html += '<div style="font-size:0.8em;font-weight:700;color:#D40511;padding:6px 0 4px;border-bottom:1px solid #D40511;margin-bottom:4px;">Leg 1: Sofia → Hall in Tirol (Economy Import)</div>';
-                html += `<div class="breakdown-row"><span>Base Rate (Zone ${leg1Zone}, ${billableWeight.toFixed(2)} kg)</span><span>${fmt(leg1Base)}</span></div>`;
+                html += '<div style="font-size:0.8em;font-weight:700;color:#CB0F13;padding:6px 0 4px;border-bottom:1px solid #CB0F13;margin-bottom:4px;">Leg 1: Sofia → Hall in Tirol (Economy Import)</div>';
+                html += `<div class="breakdown-row"><span>Base Rate (${boxCount} box${boxCount > 1 ? 'es' : ''}, Zone ${leg1Zone}, ${billableWeight.toFixed(2)} kg)</span><span>${fmt(leg1Base)}</span></div>`;
                 surchargeRows(leg1Sc, 'economy').forEach(r => {
                     html += `<div class="breakdown-row" style="color:#666;font-size:0.9em;"><span>&nbsp;&nbsp;${r.label}</span><span>${fmt(r.value)}</span></div>`;
                 });
@@ -1377,12 +1573,8 @@
                 // Leg 2 header
                 const leg2ServiceLabel = service === 'express' ? 'Express Export' : 'Economy Export';
                 const destName = window.getDestName ? window.getDestName(destination) : destination;
-                html += `<div style="font-size:0.8em;font-weight:700;color:#D40511;padding:10px 0 4px;border-bottom:1px solid #D40511;margin-bottom:4px;">Leg 2: Hall in Tirol → ${destName} (${leg2ServiceLabel})</div>`;
-                html += `<div class="breakdown-row"><span>Base Rate (Zone ${leg2Zone}, ${billableWeight.toFixed(2)} kg)</span><span>${fmt(leg2Base)}</span></div>`;
-                if (leg2Premium > 0) {
-                    const premLabel = document.querySelector('.premium-btn.active')?.textContent || '';
-                    html += `<div class="breakdown-row"><span>Premium ${premLabel}</span><span>${fmt(leg2Premium)}</span></div>`;
-                }
+                html += `<div style="font-size:0.8em;font-weight:700;color:#CB0F13;padding:10px 0 4px;border-bottom:1px solid #CB0F13;margin-bottom:4px;">Leg 2: Hall in Tirol → ${destName} (${leg2ServiceLabel})</div>`;
+                html += `<div class="breakdown-row"><span>Base Rate (${boxCount} box${boxCount > 1 ? 'es' : ''}, Zone ${leg2Zone}, ${billableWeight.toFixed(2)} kg)</span><span>${fmt(leg2Base)}</span></div>`;
                 surchargeRows(leg2Sc, service).forEach(r => {
                     html += `<div class="breakdown-row" style="color:#666;font-size:0.9em;"><span>&nbsp;&nbsp;${r.label}</span><span>${fmt(r.value)}</span></div>`;
                 });
@@ -1408,7 +1600,7 @@
                 }
                 html += `<div class="breakdown-row breakdown-total"><span>Combined Total${isIntraEU ? ' (incl. VAT)' : ' (ex-VAT)'}</span><span>${fmt(totalAfterVAT)}</span></div>`;
                 html += `<div class="breakdown-row" style="padding-top:6px;"><span>Logistics Service Fee</span><span>${fmt(logisticsFee)}</span></div>`;
-                html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#D40511; color:#FFCC00; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
+                html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#CB0F13; color:#FFFFFF; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
 
                 const breakdownEl = document.getElementById('priceBreakdown');
                 breakdownEl.innerHTML = html;
@@ -1484,9 +1676,9 @@
             }
 
             // === Single-leg surcharges & breakdown ===
-            const sc = calcSurcharges(basePrice, service, premiumSurcharge);
+            const sc = calcSurcharges(basePrice, service, 0);
             const neutralDelivery = (origin === 'BG') ? 5.00 : 0;
-            const subtotalExVAT = basePrice + premiumSurcharge + sc.total + neutralDelivery;
+            const subtotalExVAT = basePrice + sc.total + neutralDelivery;
 
             // VAT only when both origin AND destination are within the EU
             const isIntraEU = EU_COUNTRIES.has(origin) && EU_COUNTRIES.has(destination);
@@ -1496,14 +1688,17 @@
             const finalTotal = totalAfterVAT + logisticsFee;
 
             let rows = [];
-            rows.push({label: `Base Rate (${billableWeight.toFixed(2)} kg)`, value: basePrice});
-            if (premiumSurcharge > 0) {
-                const premLabel = document.querySelector('.premium-btn.active')?.textContent || '';
-                rows.push({label: `Premium ${premLabel}`, value: premiumSurcharge});
-            }
+            rows.push({label: `Base Rate (${boxCount} box${boxCount > 1 ? 'es' : ''}, ${billableWeight.toFixed(2)} kg)`, value: basePrice});
             const scRows = surchargeRows(sc, service);
 
             let html = '';
+            // Show box breakdown if multiple boxes
+            if (boxCount > 1) {
+                html += '<div style="font-size:0.75em;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;padding:4px 0 2px;">Box Details</div>';
+                boxDetails.forEach((bd, i) => {
+                    html += `<div class="breakdown-row" style="font-size:0.88em; color:#555;"><span>Box ${i+1}: ${bd.weight} kg — ${bd.boxType.label} (${bd.boxType.dims.join('×')})</span><span>Vol: ${bd.volumetric.toFixed(2)} kg</span></div>`;
+                });
+            }
             rows.forEach(r => {
                 html += `<div class="breakdown-row"><span>${r.label}</span><span>${fmt(r.value)}</span></div>`;
             });
@@ -1525,7 +1720,7 @@
             }
             html += `<div class="breakdown-row breakdown-total"><span>Total${isIntraEU ? ' (incl. VAT)' : ' (ex-VAT)'}</span><span>${fmt(totalAfterVAT)}</span></div>`;
             html += `<div class="breakdown-row" style="padding-top:6px;"><span>Logistics Service Fee</span><span>${fmt(logisticsFee)}</span></div>`;
-            html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#D40511; color:#FFCC00; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
+            html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#CB0F13; color:#FFFFFF; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
 
             const breakdownEl = document.getElementById('priceBreakdown');
             breakdownEl.innerHTML = html;
@@ -1546,7 +1741,7 @@
             const demand = parseFloat(document.getElementById('settingsDemand').value) || 0;
             const now = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
 
-            const settings = { expressFuel, economyFuel, demand, updatedAt: now };
+            const settings = { expressFuel, economyFuel, demand, updatedAt: now, version: SETTINGS_VERSION };
             localStorage.setItem('dhlPricingSettings', JSON.stringify(settings));
 
             applySettings(settings);
@@ -1569,13 +1764,22 @@
         }
 
         // Load saved settings on page load
+        // Version tag: bump this whenever defaults change to force reset
+        const SETTINGS_VERSION = 'mar2026h';
         (function loadSettings() {
             const saved = localStorage.getItem('dhlPricingSettings');
             if (saved) {
                 try {
                     const s = JSON.parse(saved);
-                    applySettings(s);
-                } catch (e) {}
+                    // If version doesn't match, discard old settings and use new defaults
+                    if (s.version === SETTINGS_VERSION) {
+                        applySettings(s);
+                    } else {
+                        localStorage.removeItem('dhlPricingSettings');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('dhlPricingSettings');
+                }
             }
         })();
 
@@ -1590,22 +1794,26 @@
             // Get shipment details
             const originEl = document.getElementById('originCountry');
             const originText = originEl.options[originEl.selectedIndex].text;
-            const destEl = document.getElementById('destinationCountry');
-            const destText = destEl.options[destEl.selectedIndex].text;
-            const serviceEl = document.getElementById('serviceType');
-            const serviceText = serviceEl.options[serviceEl.selectedIndex].text;
-            const weight = document.getElementById('actualWeight').value || '0';
-            const l = document.getElementById('length').value || '0';
-            const w = document.getElementById('width').value || '0';
-            const h = document.getElementById('height').value || '0';
-            const billableWt = document.getElementById('billableWeight').textContent;
-            const totalPrice = document.getElementById('totalPrice').textContent;
+            const destSearchInput = document.getElementById('destSearchInput');
+            const destText = destSearchInput.value || document.getElementById('destinationCountry').value;
+            const serviceVal = document.getElementById('serviceType').value;
+            const serviceText = serviceVal === 'express' ? 'Express' : 'Economy Select';
+            const billableWt = document.getElementById('billableWeight')?.textContent || '';
+            const totalPriceText = document.getElementById('totalPrice').textContent;
+
+            // Build box details text
+            const activeBoxesEmail = boxes.filter(b => b.weight > 0 && b.boxType);
+            let boxText = '';
+            activeBoxesEmail.forEach((b, i) => {
+                const bt = b.boxType;
+                boxText += `Box ${i + 1}: ${b.weight} kg (${bt.dims.join('×')} cm — ${bt.label})\n`;
+            });
 
             // Extract breakdown text from the HTML
             const breakdownEl = document.getElementById('priceBreakdown');
-            const rows = breakdownEl.querySelectorAll('.breakdown-row');
+            const rowEls = breakdownEl.querySelectorAll('.breakdown-row');
             let breakdownText = '';
-            rows.forEach(row => {
+            rowEls.forEach(row => {
                 const spans = row.querySelectorAll('span');
                 if (spans.length === 2) {
                     breakdownText += spans[0].textContent.trim() + ': ' + spans[1].textContent.trim() + '\n';
@@ -1614,23 +1822,23 @@
 
             const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
 
-            const subject = `DHL Shipping Quote — ${originText} → ${destText} (${today})`;
-            const body = `DHL Express Austria — Shipping Quote\n` +
+            const subject = `BAGJUMP Shipping Quote — ${originText} → ${destText} (${today})`;
+            const body = `BAGJUMP — Shipping Quote\n` +
                 `Date: ${today}\n` +
                 `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
                 `SHIPMENT DETAILS\n` +
                 `Origin: ${originText}\n` +
                 `Destination: ${destText}\n` +
                 `Service: ${serviceText}\n` +
-                `Actual Weight: ${weight} kg\n` +
-                `Dimensions: ${l} × ${w} × ${h} cm\n` +
+                `Boxes: ${activeBoxesEmail.length}\n` +
+                boxText +
                 `${billableWt}\n\n` +
                 `PRICE BREAKDOWN\n` +
                 `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                 breakdownText +
                 `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `This quote is valid for the current month and is subject to DHL surcharge updates.\n` +
-                `Generated by BagJump DHL Pricing Tool.`;
+                `This quote is valid for the current month and is subject to surcharge updates.\n` +
+                `Generated by BAGJUMP Shipping Calculator.`;
 
             const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailtoLink;
@@ -1812,8 +2020,328 @@
             });
         })();
 
-        // Calculate volumetric weight on load
-        calculateVolumetricWeight();
+        // (box rendering initialized above via renderBoxes())
+
+        // ==================== MODE SWITCHING ====================
+        function switchMode(mode) {
+            const dhlBtn = document.getElementById('modeDHL');
+            const airBtn = document.getElementById('modeAirCargo');
+            const dhlSec = document.getElementById('dhlSection');
+            const airSec = document.getElementById('airCargoSection');
+
+            if (mode === 'dhl') {
+                dhlSec.style.display = 'block';
+                airSec.style.display = 'none';
+                dhlBtn.style.background = '#CB0F13';
+                dhlBtn.style.color = 'white';
+                airBtn.style.background = '#f0f0f0';
+                airBtn.style.color = '#666';
+            } else {
+                dhlSec.style.display = 'none';
+                airSec.style.display = 'block';
+                airBtn.style.background = '#CB0F13';
+                airBtn.style.color = 'white';
+                dhlBtn.style.background = '#f0f0f0';
+                dhlBtn.style.color = '#666';
+            }
+        }
+
+        // ==================== CP AIR CARGO ====================
+        // Multi-component model from 120 cargo-partner quotations (2025–2026)
+        // CP Cost = Fixed Charges + (Freight + OrigTHC + DestTHC + Pickup + Delivery) × W
+        // Rates derived from actual quote line items, MAPE-optimized per weight band
+        // Overall accuracy: ~17.8% MAPE, 84% of quotes within ±30%
+        //
+        // Weight-banded rate table (fixed + per-kg rates per band):
+        //                        Fixed   Freight  DestTHC  Delivery  Pickup  OrigTHC  TOTAL/kg
+        // 100–249 kg (22 quotes)  €490    €1.76    €0.79    €0.60    €0.13    €0.17   €3.44
+        // 250–499 kg (54 quotes)  €370    €1.93    €0.67    €0.60    €0.11    €0.23   €3.54
+        // 500–999 kg (24 quotes)  €490    €2.01    €0.41    €0.47    €0.06    €0.21   €3.16
+        // 1000+ kg   (18 quotes)  €625    €2.48    €0.44    €0.44    €0.05    €0.24   €3.65  floor: €4.49/kg
+        const AIR_RATE_TIERS = [
+            { minKg: 100,  maxKg: 250,   fixed: 490, freight: 1.76, destTHC: 0.79, delivery: 0.60, pickup: 0.13, origTHC: 0.17, floor: 0 },
+            { minKg: 250,  maxKg: 500,   fixed: 370, freight: 1.93, destTHC: 0.67, delivery: 0.60, pickup: 0.11, origTHC: 0.23, floor: 0 },
+            { minKg: 500,  maxKg: 1000,  fixed: 490, freight: 2.01, destTHC: 0.41, delivery: 0.47, pickup: 0.06, origTHC: 0.21, floor: 0 },
+            { minKg: 1000, maxKg: 99999, fixed: 625, freight: 2.48, destTHC: 0.44, delivery: 0.44, pickup: 0.05, origTHC: 0.24, floor: 4.49 },
+        ];
+        function getRateTier(w) {
+            for (const t of AIR_RATE_TIERS) {
+                if (w >= t.minKg && w < t.maxKg) return t;
+            }
+            return AIR_RATE_TIERS[AIR_RATE_TIERS.length - 1];
+        }
+        //
+        const AIR_CARGO_MARGIN = 0.30; // 30% margin
+
+        function getAirCargoPrice(chargeableWeight) {
+            const tier         = getRateTier(chargeableWeight);
+            const fixedCharges = tier.fixed;
+            const freightRate  = tier.freight;
+            const freightCost  = tier.freight * chargeableWeight;
+            const origTHCRate  = tier.origTHC;
+            const origTHC      = tier.origTHC * chargeableWeight;
+            const destTHCRate  = tier.destTHC;
+            const destTHC      = tier.destTHC * chargeableWeight;
+            const pickupRate   = tier.pickup;
+            const pickupCost   = tier.pickup * chargeableWeight;
+            const deliveryRate = tier.delivery;
+            const deliveryCost = tier.delivery * chargeableWeight;
+            let cpCost = fixedCharges + freightCost + origTHC + destTHC + pickupCost + deliveryCost;
+
+            // Floor logic: ensure CP cost doesn't fall below minimum €/kg for heavy shipments
+            const floorApplied = tier.floor > 0 && (tier.floor * chargeableWeight) > cpCost;
+            if (floorApplied) {
+                cpCost = tier.floor * chargeableWeight;
+            }
+
+            const margin = cpCost * AIR_CARGO_MARGIN;
+            const sellingPrice = cpCost + margin;
+            const ratePerKg = sellingPrice / chargeableWeight;
+            return {
+                fixedCharges, freightRate, freightCost, origTHCRate, origTHC,
+                destTHCRate, destTHC, pickupRate, pickupCost, deliveryRate, deliveryCost,
+                cpCost, margin, sellingPrice, ratePerKg, floorApplied
+            };
+        }
+
+        // ---- Destination Region Tabs ----
+        function selectAirDest(region) {
+            document.getElementById('airDestRegion').value = region;
+            const tabs = ['usa', 'row'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('airDestTab_' + t);
+                if (t === region) {
+                    btn.style.background = '#CB0F13';
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.background = '#f5f5f5';
+                    btn.style.color = '#555';
+                }
+            });
+        }
+
+        // ---- Multi-Pallet State ----
+        let pallets = [{ weight: 0, l: 0, w: 0, h: 0 }];
+
+        function addPallet() {
+            pallets.push({ weight: 0, l: 0, w: 0, h: 0 });
+            renderPallets();
+        }
+
+        function removePallet(index) {
+            if (pallets.length <= 1) return;
+            pallets.splice(index, 1);
+            renderPallets();
+        }
+
+        function updatePalletField(index, field, value) {
+            pallets[index][field] = value;
+            updatePalletTotals();
+        }
+
+        function renderPallets() {
+            const container = document.getElementById('palletContainer');
+            container.innerHTML = '';
+            pallets.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'background:#fff; border:1px solid #ddd; border-radius:6px; padding:12px; margin-bottom:10px;';
+                const volW = (p.l * p.w * p.h) / 6000;
+                div.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-weight:700; color:#CB0F13; font-size:0.9em;">Pallet ${i + 1}</span>
+                        ${pallets.length > 1 ? `<button onclick="removePallet(${i})" style="margin-left:auto; background:none; border:1px solid #ccc; color:#999; border-radius:4px; padding:2px 8px; cursor:pointer; font-size:0.8em;">&times;</button>` : ''}
+                    </div>
+                    <div style="margin-bottom:6px;">
+                        <label style="font-size:0.78em; margin-bottom:3px; display:block; color:#555;">Weight (kg)</label>
+                        <input type="number" value="${p.weight || ''}" placeholder="0" step="0.1" min="0"
+                               oninput="updatePalletField(${i},'weight',parseFloat(this.value)||0)"
+                               style="width:100%; padding:7px; border:2px solid #ddd; border-radius:4px; font-size:0.9em;">
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:6px;">
+                        <div>
+                            <label style="font-size:0.78em; margin-bottom:3px; display:block; color:#555;">L (cm)</label>
+                            <input type="number" value="${p.l || ''}" placeholder="0" step="1" min="0"
+                                   oninput="updatePalletField(${i},'l',parseFloat(this.value)||0)"
+                                   style="width:100%; padding:7px; border:2px solid #ddd; border-radius:4px; font-size:0.9em;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.78em; margin-bottom:3px; display:block; color:#555;">W (cm)</label>
+                            <input type="number" value="${p.w || ''}" placeholder="0" step="1" min="0"
+                                   oninput="updatePalletField(${i},'w',parseFloat(this.value)||0)"
+                                   style="width:100%; padding:7px; border:2px solid #ddd; border-radius:4px; font-size:0.9em;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.78em; margin-bottom:3px; display:block; color:#555;">H (cm)</label>
+                            <input type="number" value="${p.h || ''}" placeholder="0" step="1" min="0"
+                                   oninput="updatePalletField(${i},'h',parseFloat(this.value)||0)"
+                                   style="width:100%; padding:7px; border:2px solid #ddd; border-radius:4px; font-size:0.9em;">
+                        </div>
+                    </div>
+                    <div style="font-size:0.8em; color:#888; padding-left:2px;">
+                        Vol. weight: <strong style="color:#555;">${volW > 0 ? volW.toFixed(1) + ' kg' : '—'}</strong>
+                        ${p.l && p.w && p.h ? ` (${p.l}×${p.w}×${p.h} cm)` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            updatePalletTotals();
+        }
+
+        function updatePalletTotals() {
+            let totalActual = 0, totalVol = 0;
+            pallets.forEach(p => {
+                totalActual += p.weight;
+                totalVol += (p.l * p.w * p.h) / 6000;
+            });
+            const chargeable = Math.max(totalActual, totalVol);
+            document.getElementById('airTotalActual').textContent = totalActual.toFixed(1) + ' kg';
+            document.getElementById('airTotalVol').textContent = totalVol.toFixed(1) + ' kg';
+            document.getElementById('airChargeableWeight').textContent = Math.ceil(chargeable) + ' kg';
+        }
+
+        // Initialize pallets on load
+        renderPallets();
+
+        function calculateAirCargo() {
+            const errEl = document.getElementById('airErrorMessage');
+            errEl.classList.remove('show');
+            errEl.textContent = '';
+
+            // Sum across all pallets
+            let totalActual = 0, totalVol = 0;
+            const activePallets = [];
+            pallets.forEach(p => {
+                if (p.weight > 0) {
+                    const vol = (p.l * p.w * p.h) / 6000;
+                    totalActual += p.weight;
+                    totalVol += vol;
+                    activePallets.push({ ...p, vol });
+                }
+            });
+
+            const chargeable = Math.ceil(Math.max(totalActual, totalVol));
+
+            if (activePallets.length === 0) {
+                errEl.textContent = 'Please enter weight for at least one pallet.';
+                errEl.classList.add('show');
+                return;
+            }
+            if (chargeable < 100) {
+                errEl.textContent = 'Minimum chargeable weight for Air Cargo is 100 kg. For smaller shipments, use Express mode.';
+                errEl.classList.add('show');
+                return;
+            }
+
+            const destRegion = document.getElementById('airDestRegion').value;
+            const destText = destRegion === 'usa' ? 'USA & Canada' : 'Rest of World';
+            const originEl = document.getElementById('airOrigin');
+            const originText = originEl.options[originEl.selectedIndex].text;
+
+            const price = getAirCargoPrice(chargeable);
+            const fmt = (v) => '€' + v.toFixed(2);
+
+            // Build breakdown
+            let html = '';
+
+            // Pallet details
+            if (activePallets.length > 1) {
+                html += '<div style="font-size:0.75em;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;padding:4px 0 2px;">Pallet Details</div>';
+                activePallets.forEach((p, i) => {
+                    const dimsText = (p.l && p.w && p.h) ? `${p.l}×${p.w}×${p.h} cm → Vol: ${p.vol.toFixed(1)} kg` : 'No dims';
+                    html += `<div class="breakdown-row" style="font-size:0.88em; color:#555;"><span>Pallet ${i+1}: ${p.weight} kg (${dimsText})</span></div>`;
+                });
+            } else if (activePallets.length === 1 && activePallets[0].l && activePallets[0].w && activePallets[0].h) {
+                const p = activePallets[0];
+                html += `<div class="breakdown-row" style="font-size:0.88em; color:#555;"><span>Dimensions: ${p.l}×${p.w}×${p.h} cm</span><span>Vol: ${p.vol.toFixed(1)} kg</span></div>`;
+            }
+
+            html += `<div class="breakdown-row"><span>Destination</span><span>${destText}</span></div>`;
+            html += `<div class="breakdown-row"><span>Total Actual Weight</span><span>${totalActual.toFixed(1)} kg</span></div>`;
+            if (totalVol > 0) {
+                html += `<div class="breakdown-row"><span>Total Volumetric Weight</span><span>${totalVol.toFixed(1)} kg</span></div>`;
+            }
+            html += `<div class="breakdown-row" style="font-weight:600;"><span>Chargeable Weight</span><span>${chargeable} kg</span></div>`;
+
+            // Totals
+            html += `<div style="border-top:1px dashed #ddd;margin-top:6px;padding-top:6px;"></div>`;
+            html += `<div class="breakdown-row breakdown-total"><span>Selling Price</span><span>${fmt(price.sellingPrice)}</span></div>`;
+            html += `<div class="breakdown-row" style="color:#666;"><span>Effective Rate</span><span>${fmt(price.ratePerKg)}/kg</span></div>`;
+
+            // Warning for 1000+ kg
+            if (chargeable >= 1000) {
+                html += `<div style="font-size:0.8em; color:#CB0F13; background:#fef2f2; padding:8px 10px; border-radius:4px; margin-top:8px; border-left:3px solid #CB0F13; line-height:1.4;">
+                    <strong>Important:</strong> For shipments over 1,000 kg, CP rates can vary significantly by route and service level.
+                    We recommend requesting an actual CP quotation before confirming this price to the customer.</div>`;
+            }
+
+            // Note
+            html += `<div style="font-size:0.78em; color:#888; padding-top:8px; border-top:1px dashed #ddd; margin-top:8px;">Estimate based on historical air cargo data. Actual costs may vary depending on route, carrier availability, and season.</div>`;
+
+            document.getElementById('airPriceBreakdown').innerHTML = html;
+            document.getElementById('airPriceBreakdown').style.display = 'block';
+            document.getElementById('airTotalPrice').textContent = fmt(price.sellingPrice);
+            document.getElementById('airEmailSection').style.display = 'block';
+        }
+
+        function emailAirQuote() {
+            const email = document.getElementById('airQuoteEmail').value.trim();
+            if (!email) { alert('Please enter an email address'); return; }
+
+            const originEl = document.getElementById('airOrigin');
+            const originText = originEl.options[originEl.selectedIndex].text;
+            const destRegion = document.getElementById('airDestRegion').value;
+            const destText = destRegion === 'usa' ? 'USA & Canada' : 'Rest of World';
+
+            let totalActual = 0, totalVol = 0;
+            let palletText = '';
+            let palletCount = 0;
+            pallets.forEach((p, i) => {
+                if (p.weight > 0) {
+                    palletCount++;
+                    const vol = (p.l * p.w * p.h) / 6000;
+                    totalActual += p.weight;
+                    totalVol += vol;
+                    const dimsText = (p.l && p.w && p.h) ? `${p.l}×${p.w}×${p.h} cm, vol ${vol.toFixed(1)} kg` : 'no dims';
+                    palletText += `Pallet ${palletCount}: ${p.weight} kg (${dimsText})\n`;
+                }
+            });
+            const chargeable = Math.ceil(Math.max(totalActual, totalVol));
+            const p = getAirCargoPrice(chargeable);
+            const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+
+            const subject = `CP AIR Cargo Quote — ${originText} → ${destText} (${today})`;
+            const body = `CP AIR Cargo — Freight Quote\n` +
+                `Date: ${today}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `SHIPMENT DETAILS\n` +
+                `Origin: ${originText}\n` +
+                `Destination: ${destText}\n` +
+                `Pallets: ${palletCount}\n` +
+                palletText +
+                `\nTotal Actual Weight: ${totalActual.toFixed(1)} kg\n` +
+                `Total Volumetric Weight: ${totalVol.toFixed(1)} kg\n` +
+                `Chargeable Weight: ${chargeable} kg\n\n` +
+                `COST BREAKDOWN\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Fixed Charges (handling, customs, docs):  €${p.fixedCharges.toFixed(2)}\n\n` +
+                `Per-KG Charges (× ${chargeable} kg):\n` +
+                `  Int. Freight (€${p.freightRate.toFixed(2)}/kg):  €${p.freightCost.toFixed(2)}\n` +
+                `  Origin THC (€${p.origTHCRate.toFixed(2)}/kg):   €${p.origTHC.toFixed(2)}\n` +
+                `  Dest THC (€${p.destTHCRate.toFixed(2)}/kg):     €${p.destTHC.toFixed(2)}\n` +
+                `  Pickup (€${p.pickupRate.toFixed(2)}/kg):         €${p.pickupCost.toFixed(2)}\n` +
+                `  Delivery (€${p.deliveryRate.toFixed(2)}/kg):     €${p.deliveryCost.toFixed(2)}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `CP Cost:           €${p.cpCost.toFixed(2)}\n` +
+                `Margin (${(AIR_CARGO_MARGIN * 100).toFixed(0)}%):          €${p.margin.toFixed(2)}\n` +
+                `Selling Price:     €${p.sellingPrice.toFixed(2)} (€${p.ratePerKg.toFixed(2)}/kg)\n` +
+                (p.floorApplied ? `\n⚠ Minimum rate floor applied for this weight class.\n` : '') +
+                (chargeable >= 1000 ? `\n⚠ IMPORTANT: For shipments over 1,000 kg, we recommend verifying\nwith an actual CP quotation before confirming pricing.\n` : '') +
+                `\nThis quote is valid for the current month.\n` +
+                `Actual costs may vary depending on route and carrier availability.\n` +
+                `Generated by BAGJUMP Shipping Calculator.`;
+
+            window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
     </script>
 </body>
 </html>
