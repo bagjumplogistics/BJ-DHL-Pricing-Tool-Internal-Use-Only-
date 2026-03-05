@@ -474,10 +474,10 @@
         <!-- Mode Selector -->
         <div style="display:flex; gap:0; margin-bottom:24px; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
             <button id="modeDHL" onclick="switchMode('dhl')" style="flex:1; padding:16px; background:#CB0F13; color:white; border:none; font-family:'Roboto Condensed',Arial Narrow,sans-serif; font-weight:700; font-size:1.05em; cursor:pointer; transition:all 0.3s; letter-spacing:0.3px;">
-                Express &amp; Economy<br><span style="font-size:0.75em; font-weight:400; opacity:0.85;">Packages up to 100 kg</span>
+                Courier<br><span style="font-size:0.75em; font-weight:400; opacity:0.85;">Express &amp; Economy — up to 100 kg</span>
             </button>
             <button id="modeAirCargo" onclick="switchMode('aircargo')" style="flex:1; padding:16px; background:#f0f0f0; color:#666; border:none; font-family:'Roboto Condensed',Arial Narrow,sans-serif; font-weight:700; font-size:1.05em; cursor:pointer; transition:all 0.3s; letter-spacing:0.3px;">
-                CP AIR Cargo<br><span style="font-size:0.75em; font-weight:400;">Heavy freight 100 kg+</span>
+                Freight<br><span style="font-size:0.75em; font-weight:400;">CP AIR Cargo — 100 kg+</span>
             </button>
         </div>
 
@@ -507,6 +507,12 @@
                         <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">Demand Surcharge (€ per kg)</label>
                         <input type="number" id="settingsDemand" step="0.01" min="0" value="0" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
                         <p style="font-size:0.78em; color:#999; margin-top:4px;">Currently suspended since 17 Feb 2026. Set to 0 when not active.</p>
+                    </div>
+
+                    <div style="background:#f8f8f8; border-radius:8px; padding:16px;">
+                        <label style="font-weight:600; font-size:0.9em; color:#333; display:block; margin-bottom:8px;">EUR → USD Exchange Rate</label>
+                        <input type="number" id="settingsEurUsd" step="0.0001" min="0" value="1.0850" style="width:100%; padding:10px; border:2px solid #ddd; border-radius:5px; font-size:1em;">
+                        <p style="font-size:0.78em; color:#999; margin-top:4px;">Used to display USD equivalent alongside EUR prices. Update as needed.</p>
                     </div>
                 </div>
 
@@ -619,16 +625,11 @@
                 <div class="price-display">
                     <div class="label">Total Shipping Cost</div>
                     <div class="amount" id="totalPrice">€0.00</div>
+                    <div id="totalPriceUSD" style="font-size:1.1em; color:rgba(255,255,255,0.9); margin-top:6px; font-weight:700; letter-spacing:0.3px;"></div>
                 </div>
 
                 <div class="price-breakdown" id="priceBreakdown" style="display:none;"></div>
 
-                <div id="emailQuoteSection" style="display:none; margin-top:12px;">
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <input type="email" id="quoteEmailAddress" placeholder="Enter email address" style="flex:1; padding:10px 12px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
-                        <button onclick="emailQuote()" style="background:#CB0F13; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:0.95em;">Email Quote</button>
-                    </div>
-                </div>
 
                 <div class="zone-indicator" id="zoneInfo" style="display: none;">
                     <div class="label">Tariff Information</div>
@@ -650,7 +651,7 @@
         <div class="content-wrapper">
             <!-- Air Cargo Input Card -->
             <div class="card">
-                <h2>CP AIR Cargo — Heavy Freight</h2>
+                <h2>Freight — CP AIR Cargo</h2>
 
                 <div class="error-message" id="airErrorMessage"></div>
 
@@ -707,16 +708,11 @@
                 <div class="price-display">
                     <div class="label">Total Freight Cost</div>
                     <div class="amount" id="airTotalPrice">€0.00</div>
+                    <div id="airTotalPriceUSD" style="font-size:1.1em; color:rgba(255,255,255,0.9); margin-top:6px; font-weight:700; letter-spacing:0.3px;"></div>
                 </div>
 
                 <div class="price-breakdown" id="airPriceBreakdown" style="display:none;"></div>
 
-                <div id="airEmailSection" style="display:none; margin-top:12px;">
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <input type="email" id="airQuoteEmail" placeholder="Enter email address" style="flex:1; padding:10px 12px; border:2px solid #ddd; border-radius:5px; font-size:0.95em;">
-                        <button onclick="emailAirQuote()" style="background:#CB0F13; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:0.95em;">Email Quote</button>
-                    </div>
-                </div>
 
                 <div class="note" style="line-height:1.7; margin-top:15px;">
                     <strong>CP AIR Cargo Notes:</strong>
@@ -1135,16 +1131,28 @@
             { id: 3, label: 'Box #3', dims: [60, 40, 30], maxWeight: 12 },   // 72L → vol 12.0 kg
             { id: 4, label: 'Box #4', dims: [60, 40, 40], maxWeight: 16 },   // 96L → vol 16.0 kg
             { id: 5, label: 'Box #5', dims: [60, 60, 40], maxWeight: 24 },   // 144L → vol 24.0 kg
-            { id: 6, label: 'Box #6', dims: [80, 60, 55], maxWeight: 44 }    // 264L → vol 44.0 kg
+            { id: 6, label: 'Box #6', dims: [80, 60, 55], maxWeight: 60 },   // 264L → vol 52.8 kg
+            { id: 7, label: 'Box #7', dims: [80, 90, 60], maxWeight: 86 }    // 432L → vol 86.4 kg
         ];
 
         function findOptimalBox(weight) {
-            // Auto-select the smallest box whose volume can realistically fit the item
+            // Two constraints:
+            // 1. Box must physically fit the item: weight <= maxWeight
+            // 2. Among valid boxes, pick the one that minimises billable weight
+            //    (billable = max of actual weight vs volumetric weight)
+            let best = null;
+            let bestBillable = Infinity;
             for (const box of BOX_TYPES) {
-                if (weight <= box.maxWeight) return box;
+                if (weight > box.maxWeight) continue; // item too heavy for this box
+                const volW = (box.dims[0] * box.dims[1] * box.dims[2]) / 5000;
+                const billable = Math.max(weight, volW);
+                if (billable < bestBillable) {
+                    bestBillable = billable;
+                    best = box;
+                }
             }
-            // If weight exceeds all boxes, return the largest
-            return BOX_TYPES[BOX_TYPES.length - 1];
+            // If weight exceeds all maxWeights, return the largest box
+            return best || BOX_TYPES[BOX_TYPES.length - 1];
         }
 
         // Multi-box state
@@ -1169,6 +1177,7 @@
                 boxes[index].boxType = null;
             }
             renderBoxInfo(index);
+            if (typeof autoCalcCourier === 'function') autoCalcCourier();
         }
 
         function overrideBoxType(index, boxId) {
@@ -1253,6 +1262,7 @@
                 document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 document.getElementById('originCountry').value = e.target.dataset.origin;
+                autoCalcCourier();
             });
         });
 
@@ -1266,8 +1276,40 @@
                 document.querySelectorAll('[data-service]').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 document.getElementById('serviceType').value = e.target.dataset.service;
+                autoCalcCourier();
             });
         });
+
+        // ==================== AUTO-CALCULATE ====================
+        let _autoCalcCourierTimer = null;
+        function autoCalcCourier() {
+            clearTimeout(_autoCalcCourierTimer);
+            _autoCalcCourierTimer = setTimeout(() => {
+                // Only auto-calc if there's at least one box with weight and a destination
+                const hasWeight = boxes.some(b => b.weight > 0);
+                const hasDest = document.getElementById('destinationCountry').value;
+                if (hasWeight && hasDest) calculatePrice();
+            }, 300);
+        }
+
+        let _autoCalcFreightTimer = null;
+        function autoCalcFreight() {
+            clearTimeout(_autoCalcFreightTimer);
+            _autoCalcFreightTimer = setTimeout(() => {
+                const hasWeight = pallets.some(p => p.weight > 0);
+                if (hasWeight) {
+                    const totalActual = pallets.reduce((s, p) => s + p.weight, 0);
+                    const totalVol = pallets.reduce((s, p) => s + (p.l * p.w * p.h) / 6000, 0);
+                    const chargeable = Math.ceil(Math.max(totalActual, totalVol));
+                    if (chargeable >= 100) calculateAirCargo();
+                }
+            }, 300);
+        }
+
+        // Listen to origin and destination changes
+        document.getElementById('originCountry').addEventListener('change', autoCalcCourier);
+        document.getElementById('destinationCountry').addEventListener('change', autoCalcCourier);
+        document.getElementById('airOrigin').addEventListener('change', autoCalcFreight);
 
         // ==================== HELPER FUNCTIONS ====================
 
@@ -1601,12 +1643,13 @@
                 html += `<div class="breakdown-row breakdown-total"><span>Combined Total${isIntraEU ? ' (incl. VAT)' : ' (ex-VAT)'}</span><span>${fmt(totalAfterVAT)}</span></div>`;
                 html += `<div class="breakdown-row" style="padding-top:6px;"><span>Logistics Service Fee</span><span>${fmt(logisticsFee)}</span></div>`;
                 html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#CB0F13; color:#FFFFFF; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
+                html += `<div class="breakdown-row" style="font-weight:700; font-size:0.95em; background:#a80d10; color:rgba(255,255,255,0.95); padding:6px 8px; border-radius:0 0 4px 4px; margin-top:-2px;"><span></span><span>≈ $${(finalTotal * EUR_USD_RATE).toFixed(2)} USD</span></div>`;
 
                 const breakdownEl = document.getElementById('priceBreakdown');
                 breakdownEl.innerHTML = html;
                 breakdownEl.style.display = 'block';
-                document.getElementById('emailQuoteSection').style.display = 'block';
                 document.getElementById('totalPrice').textContent = fmt(finalTotal);
+                document.getElementById('totalPriceUSD').textContent = '≈ $' + (finalTotal * EUR_USD_RATE).toFixed(2) + ' USD';
 
                 document.getElementById('zoneInfo').style.display = 'block';
                 document.getElementById('serviceInfo').textContent = `Via Hall: Economy Import + ${leg2ServiceLabel}`;
@@ -1721,12 +1764,13 @@
             html += `<div class="breakdown-row breakdown-total"><span>Total${isIntraEU ? ' (incl. VAT)' : ' (ex-VAT)'}</span><span>${fmt(totalAfterVAT)}</span></div>`;
             html += `<div class="breakdown-row" style="padding-top:6px;"><span>Logistics Service Fee</span><span>${fmt(logisticsFee)}</span></div>`;
             html += `<div class="breakdown-row" style="font-weight:800; font-size:1.1em; background:#CB0F13; color:#FFFFFF; padding:10px 8px; border-radius:4px; margin-top:4px;"><span>Final Total</span><span>${fmt(finalTotal)}</span></div>`;
+            html += `<div class="breakdown-row" style="font-weight:700; font-size:0.95em; background:#a80d10; color:rgba(255,255,255,0.95); padding:6px 8px; border-radius:0 0 4px 4px; margin-top:-2px;"><span></span><span>≈ $${(finalTotal * EUR_USD_RATE).toFixed(2)} USD</span></div>`;
 
             const breakdownEl = document.getElementById('priceBreakdown');
             breakdownEl.innerHTML = html;
             breakdownEl.style.display = 'block';
-            document.getElementById('emailQuoteSection').style.display = 'block';
             document.getElementById('totalPrice').textContent = fmt(finalTotal);
+            document.getElementById('totalPriceUSD').textContent = '≈ $' + (finalTotal * EUR_USD_RATE).toFixed(2) + ' USD';
 
             document.getElementById('zoneInfo').style.display = 'block';
             document.getElementById('serviceInfo').textContent = serviceType;
@@ -1741,12 +1785,16 @@
             const demand = parseFloat(document.getElementById('settingsDemand').value) || 0;
             const now = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
 
-            const settings = { expressFuel, economyFuel, demand, updatedAt: now, version: SETTINGS_VERSION };
+            const eurUsd = parseFloat(document.getElementById('settingsEurUsd').value) || 1.0850;
+            const settings = { expressFuel, economyFuel, demand, eurUsd, updatedAt: now, version: SETTINGS_VERSION };
             localStorage.setItem('dhlPricingSettings', JSON.stringify(settings));
 
             applySettings(settings);
             document.getElementById('settingsModal').style.display = 'none';
         }
+
+        // Global EUR/USD rate (default 1.0850)
+        let EUR_USD_RATE = 1.0850;
 
         function applySettings(s) {
             document.getElementById('fuelSurcharge').value = s.expressFuel;
@@ -1758,6 +1806,10 @@
             document.getElementById('displayExpressFuel').textContent = s.expressFuel + '%';
             document.getElementById('displayEconomyFuel').textContent = s.economyFuel + '%';
             document.getElementById('displayDemand').textContent = '€' + s.demand.toFixed(2) + '/kg';
+            if (s.eurUsd) {
+                EUR_USD_RATE = s.eurUsd;
+                document.getElementById('settingsEurUsd').value = s.eurUsd;
+            }
             if (s.updatedAt) {
                 document.getElementById('settingsLastUpdated').textContent = 'Surcharges updated: ' + s.updatedAt;
             }
@@ -1765,7 +1817,7 @@
 
         // Load saved settings on page load
         // Version tag: bump this whenever defaults change to force reset
-        const SETTINGS_VERSION = 'mar2026h';
+        const SETTINGS_VERSION = 'mar2026l';
         (function loadSettings() {
             const saved = localStorage.getItem('dhlPricingSettings');
             if (saved) {
@@ -1783,66 +1835,6 @@
             }
         })();
 
-        // Email quote function
-        function emailQuote() {
-            const email = document.getElementById('quoteEmailAddress').value.trim();
-            if (!email) {
-                alert('Please enter an email address');
-                return;
-            }
-
-            // Get shipment details
-            const originEl = document.getElementById('originCountry');
-            const originText = originEl.options[originEl.selectedIndex].text;
-            const destSearchInput = document.getElementById('destSearchInput');
-            const destText = destSearchInput.value || document.getElementById('destinationCountry').value;
-            const serviceVal = document.getElementById('serviceType').value;
-            const serviceText = serviceVal === 'express' ? 'Express' : 'Economy Select';
-            const billableWt = document.getElementById('billableWeight')?.textContent || '';
-            const totalPriceText = document.getElementById('totalPrice').textContent;
-
-            // Build box details text
-            const activeBoxesEmail = boxes.filter(b => b.weight > 0 && b.boxType);
-            let boxText = '';
-            activeBoxesEmail.forEach((b, i) => {
-                const bt = b.boxType;
-                boxText += `Box ${i + 1}: ${b.weight} kg (${bt.dims.join('×')} cm — ${bt.label})\n`;
-            });
-
-            // Extract breakdown text from the HTML
-            const breakdownEl = document.getElementById('priceBreakdown');
-            const rowEls = breakdownEl.querySelectorAll('.breakdown-row');
-            let breakdownText = '';
-            rowEls.forEach(row => {
-                const spans = row.querySelectorAll('span');
-                if (spans.length === 2) {
-                    breakdownText += spans[0].textContent.trim() + ': ' + spans[1].textContent.trim() + '\n';
-                }
-            });
-
-            const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
-
-            const subject = `BAGJUMP Shipping Quote — ${originText} → ${destText} (${today})`;
-            const body = `BAGJUMP — Shipping Quote\n` +
-                `Date: ${today}\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-                `SHIPMENT DETAILS\n` +
-                `Origin: ${originText}\n` +
-                `Destination: ${destText}\n` +
-                `Service: ${serviceText}\n` +
-                `Boxes: ${activeBoxesEmail.length}\n` +
-                boxText +
-                `${billableWt}\n\n` +
-                `PRICE BREAKDOWN\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                breakdownText +
-                `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `This quote is valid for the current month and is subject to surcharge updates.\n` +
-                `Generated by BAGJUMP Shipping Calculator.`;
-
-            const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailtoLink;
-        }
 
         // Full country list
         const ALL_COUNTRIES = [
@@ -1960,23 +1952,66 @@
                 hidden.value = code;
                 input.value = `${name} (${code})`;
                 dropdown.style.display = 'none';
+                if (typeof autoCalcCourier === 'function') autoCalcCourier();
+            }
+
+            // Common aliases: typing "US" → United States, "UK" → United Kingdom, etc.
+            const COUNTRY_ALIASES = {
+                'us': 'US', 'usa': 'US', 'america': 'US', 'united states': 'US',
+                'uk': 'GB', 'england': 'GB', 'britain': 'GB', 'great britain': 'GB',
+                'uae': 'AE', 'emirates': 'AE',
+                'korea': 'KR', 'south korea': 'KR',
+                'czech': 'CZ', 'czechia': 'CZ',
+                'holland': 'NL', 'netherlands': 'NL',
+                'ksa': 'SA', 'saudi': 'SA',
+                'nz': 'NZ', 'new zealand': 'NZ',
+                'sg': 'SG', 'singapore': 'SG',
+                'hk': 'HK', 'hong kong': 'HK',
+                'sk': 'SK', 'slovakia': 'SK',
+                'si': 'SI', 'slovenia': 'SI',
+                'bg': 'BG', 'bulgaria': 'BG',
+                'at': 'AT', 'austria': 'AT',
+                'de': 'DE', 'germany': 'DE',
+                'fr': 'FR', 'france': 'FR',
+                'ch': 'CH', 'switzerland': 'CH',
+                'ca': 'CA', 'canada': 'CA',
+            };
+
+            function searchCountries(q) {
+                if (!q) return ALL_COUNTRIES;
+                const ql = q.toLowerCase();
+                // Check alias first — if exact alias match, put that country on top
+                const aliasCode = COUNTRY_ALIASES[ql];
+                const matches = ALL_COUNTRIES.filter(c =>
+                    c.name.toLowerCase().includes(ql) || c.code.toLowerCase() === ql
+                );
+                // Sort: exact code match first, then name-starts-with, then contains
+                matches.sort((a, b) => {
+                    const aExact = (a.code === aliasCode) || (a.code.toLowerCase() === ql) ? 0 : 1;
+                    const bExact = (b.code === aliasCode) || (b.code.toLowerCase() === ql) ? 0 : 1;
+                    if (aExact !== bExact) return aExact - bExact;
+                    const aStarts = a.name.toLowerCase().startsWith(ql) ? 0 : 1;
+                    const bStarts = b.name.toLowerCase().startsWith(ql) ? 0 : 1;
+                    if (aStarts !== bStarts) return aStarts - bStarts;
+                    return a.name.localeCompare(b.name);
+                });
+                // If alias matched but wasn't in results, prepend it
+                if (aliasCode && !matches.some(c => c.code === aliasCode)) {
+                    const aliasCountry = ALL_COUNTRIES.find(c => c.code === aliasCode);
+                    if (aliasCountry) matches.unshift(aliasCountry);
+                }
+                return matches;
             }
 
             input.addEventListener('focus', () => {
-                const q = input.value.trim().toLowerCase();
-                const list = q ? ALL_COUNTRIES.filter(c =>
-                    c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
-                ) : ALL_COUNTRIES;
-                renderDropdown(list);
+                const q = input.value.trim();
+                renderDropdown(searchCountries(q));
             });
 
             input.addEventListener('input', () => {
                 hidden.value = ''; // Clear selection when typing
-                const q = input.value.trim().toLowerCase();
-                const list = q ? ALL_COUNTRIES.filter(c =>
-                    c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
-                ) : ALL_COUNTRIES;
-                renderDropdown(list);
+                const q = input.value.trim();
+                renderDropdown(searchCountries(q));
             });
 
             input.addEventListener('keydown', (e) => {
@@ -2059,10 +2094,10 @@
         // 500–999 kg (24 quotes)  €490    €2.01    €0.41    €0.47    €0.06    €0.21   €3.16
         // 1000+ kg   (18 quotes)  €625    €2.48    €0.44    €0.44    €0.05    €0.24   €3.65  floor: €4.49/kg
         const AIR_RATE_TIERS = [
-            { minKg: 100,  maxKg: 250,   fixed: 490, freight: 1.76, destTHC: 0.79, delivery: 0.60, pickup: 0.13, origTHC: 0.17, floor: 0 },
-            { minKg: 250,  maxKg: 500,   fixed: 370, freight: 1.93, destTHC: 0.67, delivery: 0.60, pickup: 0.11, origTHC: 0.23, floor: 0 },
-            { minKg: 500,  maxKg: 1000,  fixed: 490, freight: 2.01, destTHC: 0.41, delivery: 0.47, pickup: 0.06, origTHC: 0.21, floor: 0 },
-            { minKg: 1000, maxKg: 99999, fixed: 625, freight: 2.48, destTHC: 0.44, delivery: 0.44, pickup: 0.05, origTHC: 0.24, floor: 4.49 },
+            { minKg: 100,  maxKg: 250,   fixed: 661, freight: 0.96, destTHC: 0.43, delivery: 0.35, pickup: 0.08, origTHC: 0.12, floor: 0 },
+            { minKg: 250,  maxKg: 500,   fixed: 416, freight: 1.81, destTHC: 0.65, delivery: 0.62, pickup: 0.14, origTHC: 0.21, floor: 0 },
+            { minKg: 500,  maxKg: 1000,  fixed: 254, freight: 1.43, destTHC: 0.40, delivery: 0.42, pickup: 0.07, origTHC: 0.17, floor: 0 },
+            { minKg: 1000, maxKg: 99999, fixed: 2500, freight: 0.81, destTHC: 0.18, delivery: 0.20, pickup: 0.05, origTHC: 0.11, floor: 4.49 },
         ];
         function getRateTier(w) {
             for (const t of AIR_RATE_TIERS) {
@@ -2118,6 +2153,7 @@
                     btn.style.color = '#555';
                 }
             });
+            autoCalcFreight();
         }
 
         // ---- Multi-Pallet State ----
@@ -2137,6 +2173,7 @@
         function updatePalletField(index, field, value) {
             pallets[index][field] = value;
             updatePalletTotals();
+            autoCalcFreight();
         }
 
         function renderPallets() {
@@ -2265,6 +2302,7 @@
             // Totals
             html += `<div style="border-top:1px dashed #ddd;margin-top:6px;padding-top:6px;"></div>`;
             html += `<div class="breakdown-row breakdown-total"><span>Selling Price</span><span>${fmt(price.sellingPrice)}</span></div>`;
+            html += `<div class="breakdown-row" style="font-weight:700; font-size:0.95em; background:#a80d10; color:rgba(255,255,255,0.95); padding:6px 8px; border-radius:0 0 4px 4px; margin-top:-2px;"><span></span><span>≈ $${(price.sellingPrice * EUR_USD_RATE).toFixed(2)} USD</span></div>`;
             html += `<div class="breakdown-row" style="color:#666;"><span>Effective Rate</span><span>${fmt(price.ratePerKg)}/kg</span></div>`;
 
             // Warning for 1000+ kg
@@ -2280,68 +2318,9 @@
             document.getElementById('airPriceBreakdown').innerHTML = html;
             document.getElementById('airPriceBreakdown').style.display = 'block';
             document.getElementById('airTotalPrice').textContent = fmt(price.sellingPrice);
-            document.getElementById('airEmailSection').style.display = 'block';
+            document.getElementById('airTotalPriceUSD').textContent = '≈ $' + (price.sellingPrice * EUR_USD_RATE).toFixed(2) + ' USD';
         }
 
-        function emailAirQuote() {
-            const email = document.getElementById('airQuoteEmail').value.trim();
-            if (!email) { alert('Please enter an email address'); return; }
-
-            const originEl = document.getElementById('airOrigin');
-            const originText = originEl.options[originEl.selectedIndex].text;
-            const destRegion = document.getElementById('airDestRegion').value;
-            const destText = destRegion === 'usa' ? 'USA & Canada' : 'Rest of World';
-
-            let totalActual = 0, totalVol = 0;
-            let palletText = '';
-            let palletCount = 0;
-            pallets.forEach((p, i) => {
-                if (p.weight > 0) {
-                    palletCount++;
-                    const vol = (p.l * p.w * p.h) / 6000;
-                    totalActual += p.weight;
-                    totalVol += vol;
-                    const dimsText = (p.l && p.w && p.h) ? `${p.l}×${p.w}×${p.h} cm, vol ${vol.toFixed(1)} kg` : 'no dims';
-                    palletText += `Pallet ${palletCount}: ${p.weight} kg (${dimsText})\n`;
-                }
-            });
-            const chargeable = Math.ceil(Math.max(totalActual, totalVol));
-            const p = getAirCargoPrice(chargeable);
-            const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
-
-            const subject = `CP AIR Cargo Quote — ${originText} → ${destText} (${today})`;
-            const body = `CP AIR Cargo — Freight Quote\n` +
-                `Date: ${today}\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-                `SHIPMENT DETAILS\n` +
-                `Origin: ${originText}\n` +
-                `Destination: ${destText}\n` +
-                `Pallets: ${palletCount}\n` +
-                palletText +
-                `\nTotal Actual Weight: ${totalActual.toFixed(1)} kg\n` +
-                `Total Volumetric Weight: ${totalVol.toFixed(1)} kg\n` +
-                `Chargeable Weight: ${chargeable} kg\n\n` +
-                `COST BREAKDOWN\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `Fixed Charges (handling, customs, docs):  €${p.fixedCharges.toFixed(2)}\n\n` +
-                `Per-KG Charges (× ${chargeable} kg):\n` +
-                `  Int. Freight (€${p.freightRate.toFixed(2)}/kg):  €${p.freightCost.toFixed(2)}\n` +
-                `  Origin THC (€${p.origTHCRate.toFixed(2)}/kg):   €${p.origTHC.toFixed(2)}\n` +
-                `  Dest THC (€${p.destTHCRate.toFixed(2)}/kg):     €${p.destTHC.toFixed(2)}\n` +
-                `  Pickup (€${p.pickupRate.toFixed(2)}/kg):         €${p.pickupCost.toFixed(2)}\n` +
-                `  Delivery (€${p.deliveryRate.toFixed(2)}/kg):     €${p.deliveryCost.toFixed(2)}\n\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `CP Cost:           €${p.cpCost.toFixed(2)}\n` +
-                `Margin (${(AIR_CARGO_MARGIN * 100).toFixed(0)}%):          €${p.margin.toFixed(2)}\n` +
-                `Selling Price:     €${p.sellingPrice.toFixed(2)} (€${p.ratePerKg.toFixed(2)}/kg)\n` +
-                (p.floorApplied ? `\n⚠ Minimum rate floor applied for this weight class.\n` : '') +
-                (chargeable >= 1000 ? `\n⚠ IMPORTANT: For shipments over 1,000 kg, we recommend verifying\nwith an actual CP quotation before confirming pricing.\n` : '') +
-                `\nThis quote is valid for the current month.\n` +
-                `Actual costs may vary depending on route and carrier availability.\n` +
-                `Generated by BAGJUMP Shipping Calculator.`;
-
-            window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        }
     </script>
 </body>
 </html>
